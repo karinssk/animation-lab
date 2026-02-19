@@ -1,0 +1,570 @@
+.map-root {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px 14px;
+  background:
+    radial-gradient(circle at 18% 10%, #d8f4ff 0%, #ecf8ff 34%, transparent 54%),
+    radial-gradient(circle at 85% 18%, #ffe7cf 0%, #fff3e1 34%, transparent 56%),
+    #efe9de;
+}
+
+.map-phone {
+  position: relative;
+  width: 300px;
+  height: 620px;
+  border-radius: 46px;
+  background: #f2f2f3;
+  border: 5px solid #cfd0d4;
+  overflow: hidden;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.18);
+}
+
+.map-phone::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 26px;
+  background: #000;
+  border-radius: 999px;
+  z-index: 100;
+}
+
+.map-page {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+.map-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  background: #f2f2f3;
+  flex-shrink: 0;
+}
+
+.map-battery {
+  position: relative;
+  width: 18px;
+  height: 10px;
+  border: 1.5px solid #111;
+  border-radius: 2px;
+  display: inline-flex;
+  align-items: center;
+  padding: 1px;
+  box-sizing: border-box;
+}
+
+.map-battery__level {
+  width: 100%;
+  height: 100%;
+  background: #111;
+  border-radius: 1px;
+}
+
+.map-battery__cap {
+  position: absolute;
+  right: -3px;
+  top: 2px;
+  width: 2px;
+  height: 4px;
+  background: #111;
+  border-radius: 1px;
+}
+
+.map-body {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.map-canvas {
+  position: absolute;
+  inset: 0;
+  background: #d6efff;
+}
+
+.map-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Zoomable layer — contains image + pins */
+.map-viewport {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.25s ease;
+}
+
+/* ── §5.2 Search + Filter overlay ────────────────────────────────────────────  */
+
+.map-search-overlay {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.map-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(10px);
+  border-radius: 14px;
+  border: 1px solid #e4e4e7;
+  padding: 7px 12px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.14);
+}
+
+.map-search-icon {
+  width: 14px;
+  height: 14px;
+  color: #71717a;
+  flex-shrink: 0;
+}
+
+.map-search-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-size: 11px;
+  color: #18181b;
+  font-weight: 600;
+}
+
+.map-search-input::placeholder {
+  color: #a1a1aa;
+  font-weight: 500;
+}
+
+.map-search-clear {
+  font-size: 10px;
+  color: #71717a;
+  flex-shrink: 0;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: 4px;
+  transition: background 0.1s;
+}
+
+.map-search-clear:hover {
+  background: #f4f4f5;
+}
+
+.map-filter-strip {
+  display: flex;
+  gap: 5px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.map-filter-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.map-filter-pill {
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(8px);
+  color: #27272a;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 5px 10px;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.1s ease;
+}
+
+.map-filter-pill:active {
+  transform: scale(0.92);
+}
+
+/* ── §5.2 Zoom controls ──────────────────────────────────────────────────────  */
+
+.map-zoom-controls {
+  position: absolute;
+  right: 10px;
+  bottom: calc(68% + 56px);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.map-zoom-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(8px);
+  border: 1px solid #e4e4e7;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  font-size: 18px;
+  font-weight: 700;
+  color: #18181b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: transform 0.1s ease, background 0.1s;
+}
+
+.map-zoom-btn:active {
+  transform: scale(0.9);
+  background: #f4f4f5;
+}
+
+/* ── §5.2 My location button ─────────────────────────────────────────────────  */
+
+.map-my-location {
+  position: absolute;
+  right: 10px;
+  bottom: calc(68% + 12px);
+  z-index: 1000;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 1px solid #e4e4e7;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #0ea5e9;
+  transition: transform 0.1s ease;
+}
+
+.map-my-location:active {
+  transform: scale(0.9);
+}
+
+/* ── Restaurant pins ─────────────────────────────────────────────────────────  */
+
+.map-marker {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 2px solid #fff;
+  background: #f97316;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  box-shadow: 0 8px 16px rgba(249, 115, 22, 0.4);
+  transition: transform 0.12s ease;
+}
+
+.map-marker:active {
+  transform: translate(-50%, -50%) scale(0.9);
+}
+
+.map-marker--active {
+  background: #0ea5e9;
+  box-shadow: 0 10px 18px rgba(14, 165, 233, 0.42);
+}
+
+/* Search match — pulse ring */
+.map-marker--matched {
+  outline: 3px solid #fbbf24;
+  outline-offset: 2px;
+  animation: map-pin-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes map-pin-pulse {
+  0%, 100% { outline-color: #fbbf24; }
+  50%       { outline-color: #f59e0b; }
+}
+
+/* Non-matching pin during search — dimmed */
+.map-marker--dim {
+  opacity: 0.3;
+}
+
+/* ── Leaflet divIcon pins ────────────────────────────────────────────────────  */
+
+.lf-pin {
+  width: 40px;
+  height: 40px;
+  border-radius: 999px;
+  border: 2px solid #fff;
+  background: #f97316;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 16px rgba(249, 115, 22, 0.4);
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.lf-pin--active {
+  background: #0ea5e9;
+  box-shadow: 0 10px 18px rgba(14, 165, 233, 0.42);
+}
+
+.lf-pin--matched {
+  outline: 3px solid #fbbf24;
+  outline-offset: 2px;
+  animation: map-pin-pulse 1.2s ease-in-out infinite;
+}
+
+.lf-pin--dim {
+  opacity: 0.3;
+}
+
+/* ── Bottom sheet ────────────────────────────────────────────────────────────  */
+
+.map-sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 68%;
+  background: #fff;
+  border-radius: 24px 24px 0 0;
+  border-top: 1px solid #e5e7eb;
+  box-shadow: 0 -10px 30px rgba(15, 23, 42, 0.15);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.map-sheet--hidden {
+  transform: translateY(100%);
+  pointer-events: none;
+}
+
+.map-sheet__handle {
+  width: 36px;
+  height: 5px;
+  border-radius: 999px;
+  background: #d4d4d8;
+  margin: 8px auto 6px;
+}
+
+.map-sheet__content {
+  overflow-y: auto;
+  padding: 0 12px 6px;
+  scrollbar-width: none;
+}
+
+.map-sheet__content::-webkit-scrollbar {
+  display: none;
+}
+
+.map-nav {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-bottom: 2px;
+}
+
+.map-nav::-webkit-scrollbar {
+  display: none;
+}
+
+.map-nav__chip {
+  border-radius: 999px;
+  border: 1px solid #d4d4d8;
+  background: #fafafa;
+  font-size: 10px;
+  font-weight: 800;
+  color: #27272a;
+  padding: 6px 10px;
+  white-space: nowrap;
+  transition: transform 0.1s ease;
+}
+
+.map-nav__chip:active {
+  transform: scale(0.92);
+}
+
+.map-nav__chip--active {
+  border-color: #38bdf8;
+  background: #e0f2fe;
+  color: #0c4a6e;
+}
+
+.map-top-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.map-icon-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #e4e4e7;
+  background: #fff;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.map-mini-btn {
+  border: 1px solid #e4e4e7;
+  background: #f9fafb;
+  color: #0f172a;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 8px 4px;
+}
+
+.map-food-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.map-food {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e5e7eb;
+  height: 72px;
+}
+
+.map-food img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ── Pressable ───────────────────────────────────────────────────────────────  */
+
+.map-pressable {
+  transition: transform 0.12s ease;
+}
+
+.map-pressable:active {
+  transform: scale(0.93);
+}
+
+/* ── Persistent game resume bar ──────────────────────────────────────────────  */
+
+.map-game-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  margin: 0 8px 4px;
+  padding: 8px 12px;
+  background: linear-gradient(90deg, #064e3b 0%, #065f46 100%);
+  border-radius: 14px;
+  text-decoration: none;
+  transition: opacity 0.12s ease;
+}
+
+.map-game-bar:active {
+  opacity: 0.82;
+}
+
+.map-game-bar__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #34d399;
+  flex-shrink: 0;
+  animation: map-dot-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes map-dot-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.45; transform: scale(0.72); }
+}
+
+.map-game-bar__name {
+  font-size: 11px;
+  font-weight: 800;
+  color: #ffffff;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.map-game-bar__sub {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.2;
+  margin-top: 1px;
+}
+
+.map-game-bar__cta {
+  font-size: 10px;
+  font-weight: 800;
+  color: #34d399;
+  flex-shrink: 0;
+}
+
+/* ── Bottom nav ──────────────────────────────────────────────────────────────  */
+
+.map-bottom-nav {
+  flex-shrink: 0;
+  margin: 0 8px 8px;
+  border: 1px solid #e5e7eb;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  border-radius: 18px;
+  padding: 8px 6px 10px;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+}
+
+.map-bottom-nav__item {
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  color: #3f3f46;
+  border-radius: 12px;
+  padding: 4px 2px;
+  transition: transform 0.1s ease;
+}
+
+.map-bottom-nav__item:active {
+  transform: scale(0.9);
+}
+
+.map-bottom-nav__item--active {
+  background: #111827;
+  color: #fff;
+}
+
+.map-bottom-nav__label {
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 700;
+}

@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const NAV_ITEMS = [
   { href: "/", label: "Scroll" },
+  { href: "/home-screen-v2", label: "Toast Home" },
   { href: "/create-wallet-pages", label: "Wallet V1 (SVG)" },
   { href: "/create-wallet-pages-v2", label: "Wallet V2 (Emoji)" },
 
@@ -18,7 +19,7 @@ const NAV_ITEMS = [
   { href: "/celebratory-v2", label: "Celebratory V2" },
   { href: "/celebratory-v3", label: "Celebratory V3" },
   { href: "/celebratory-v4", label: "Celebratory V4" },
-  { href: "/restaurant-search", label: "Restaurant Search" },
+  { href: "/map", label: "Map Tab" },
   { href: "/design-load", label: "Design Load" },
   { href: "/fast-onboarding", label: "Fast Onboarding" },
   { href: "/comments", label: "Comments" },

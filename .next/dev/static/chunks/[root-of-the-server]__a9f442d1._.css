@@ -1,0 +1,290 @@
+/* [next]/internal/font/google/fredoka_acb1aeef.module.css [app-client] (css) */
+@font-face {
+  font-family: Fredoka;
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("../media/b6df7c92285ebcd2-s.193567cf.woff2") format("woff2");
+  unicode-range: U+307-308, U+590-5FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
+}
+
+@font-face {
+  font-family: Fredoka;
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("../media/eeba9b1ad34c1404-s.7f2acc0f.woff2") format("woff2");
+  unicode-range: U+100-2BA, U+2BD-2C5, U+2C7-2CC, U+2CE-2D7, U+2DD-2FF, U+304, U+308, U+329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: Fredoka;
+  font-style: normal;
+  font-weight: 500;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("../media/5d52bd6c4cb3f315-s.p.610fd2a3.woff2") format("woff2");
+  unicode-range: U+??, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+304, U+308, U+329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: Fredoka;
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("../media/b6df7c92285ebcd2-s.193567cf.woff2") format("woff2");
+  unicode-range: U+307-308, U+590-5FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
+}
+
+@font-face {
+  font-family: Fredoka;
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("../media/eeba9b1ad34c1404-s.7f2acc0f.woff2") format("woff2");
+  unicode-range: U+100-2BA, U+2BD-2C5, U+2C7-2CC, U+2CE-2D7, U+2DD-2FF, U+304, U+308, U+329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: Fredoka;
+  font-style: normal;
+  font-weight: 600;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("../media/5d52bd6c4cb3f315-s.p.610fd2a3.woff2") format("woff2");
+  unicode-range: U+??, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+304, U+308, U+329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: Fredoka;
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("../media/b6df7c92285ebcd2-s.193567cf.woff2") format("woff2");
+  unicode-range: U+307-308, U+590-5FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
+}
+
+@font-face {
+  font-family: Fredoka;
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("../media/eeba9b1ad34c1404-s.7f2acc0f.woff2") format("woff2");
+  unicode-range: U+100-2BA, U+2BD-2C5, U+2C7-2CC, U+2CE-2D7, U+2DD-2FF, U+304, U+308, U+329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: Fredoka;
+  font-style: normal;
+  font-weight: 700;
+  font-stretch: 100%;
+  font-display: swap;
+  src: url("../media/5d52bd6c4cb3f315-s.p.610fd2a3.woff2") format("woff2");
+  unicode-range: U+??, U+131, U+152-153, U+2BB-2BC, U+2C6, U+2DA, U+2DC, U+304, U+308, U+329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: Fredoka Fallback;
+  src: local(Arial);
+  ascent-override: 95.64%;
+  descent-override: 23.17%;
+  line-gap-override: 0.0%;
+  size-adjust: 101.84%;
+}
+
+.fredoka_acb1aeef-module__PkmGfG__className {
+  font-family: Fredoka, Fredoka Fallback;
+  font-style: normal;
+}
+
+/* [project]/app/home-screen-v3/home-screen-v3.css [app-client] (css) */
+.hv3-root {
+  background: radial-gradient(circle at 18% 12%, #ffe8bf 0%, #fff3db 36%, #0000 56%), radial-gradient(circle at 80% 24%, #d8f2ff 0%, #ecf7ff 36%, #0000 56%), #fdf3e3;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 24px 14px;
+  display: flex;
+}
+
+.hv3-phone {
+  background: #f2f2f3;
+  border: 5px solid #cfd0d4;
+  border-radius: 46px;
+  width: 300px;
+  height: 620px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 24px 48px #0000002e;
+}
+
+.hv3-phone:before {
+  content: "";
+  z-index: 100;
+  background: #000;
+  border-radius: 999px;
+  width: 100px;
+  height: 26px;
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.hv3-page {
+  background: #fff;
+  flex-direction: column;
+  height: 100%;
+  display: flex;
+  position: relative;
+}
+
+.hv3-status {
+  background: #f2f2f3;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 20px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+}
+
+.hv3-battery {
+  box-sizing: border-box;
+  border: 1.5px solid #111;
+  border-radius: 2px;
+  align-items: center;
+  width: 18px;
+  height: 10px;
+  padding: 1px;
+  display: inline-flex;
+  position: relative;
+}
+
+.hv3-battery__level {
+  background: #111;
+  border-radius: 1px;
+  width: 100%;
+  height: 100%;
+}
+
+.hv3-battery__cap {
+  background: #111;
+  border-radius: 1px;
+  width: 2px;
+  height: 4px;
+  position: absolute;
+  top: 2px;
+  right: -3px;
+}
+
+.hv3-content {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  flex: 1;
+  padding: 12px;
+  overflow-y: auto;
+}
+
+.hv3-content::-webkit-scrollbar {
+  display: none;
+}
+
+.hv3-shell {
+  background: radial-gradient(circle at 88% 10%, #ffaa3a21, #0000 35%), radial-gradient(circle at 10% 15%, #50b4ff1c, #0000 35%), #fff;
+  border: 1px solid #ffd5a5;
+  border-radius: 30px;
+  padding: 14px;
+  box-shadow: 0 18px 42px #ff851f1f;
+}
+
+.hv3-quick-strip {
+  scrollbar-width: none;
+  gap: 6px;
+  padding-bottom: 2px;
+  display: flex;
+  overflow-x: auto;
+}
+
+.hv3-quick-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.hv3-quick-pill {
+  color: #27272a;
+  white-space: nowrap;
+  background: #fafafa;
+  border: 1px solid #e4e4e7;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 10px;
+  font-weight: 800;
+}
+
+.hv3-quick-pill--hot {
+  color: #c2410c;
+  background: #fff0db;
+  border-color: #ffc98a;
+}
+
+.hv3-banner {
+  background: linear-gradient(130deg, #fff4e0 0%, #fffcea 100%);
+  border: 1px solid #ffc184;
+  border-radius: 24px;
+}
+
+.hv3-mission {
+  background: #fffbeb;
+  border: 1px dashed #f59e0b;
+  border-radius: 18px;
+}
+
+.hv3-nav {
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  background: #fffffff2;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  flex-shrink: 0;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  margin: 0 8px 8px;
+  padding: 8px 6px 10px;
+  display: grid;
+}
+
+.hv3-nav__item {
+  color: #3f3f46;
+  border-radius: 12px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 2px;
+  text-decoration: none;
+  display: flex;
+}
+
+.hv3-nav__item--active {
+  color: #fff;
+  background: #111827;
+}
+
+.hv3-nav__icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.hv3-nav__label {
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/*# sourceMappingURL=%5Broot-of-the-server%5D__a9f442d1._.css.map*/

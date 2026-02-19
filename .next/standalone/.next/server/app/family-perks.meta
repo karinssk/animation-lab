@@ -1,0 +1,15 @@
+{
+  "headers": {
+    "x-nextjs-stale-time": "300",
+    "x-nextjs-prerender": "1",
+    "x-next-cache-tags": "_N_T_/layout,_N_T_/family-perks/layout,_N_T_/family-perks/page,_N_T_/family-perks"
+  },
+  "segmentPaths": [
+    "/_tree",
+    "/_full",
+    "/family-perks/__PAGE__",
+    "/family-perks",
+    "/_index",
+    "/_head"
+  ]
+}
