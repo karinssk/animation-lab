@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Baloo_2 } from "next/font/google";
 import { useSearchParams } from "next/navigation";
@@ -76,7 +76,7 @@ function useCountdown(seconds: number, running: boolean) {
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default function WaitingRoomPage() {
+function WaitingRoomContent() {
   const searchParams                  = useSearchParams();
   const inviteToken                   = searchParams.get("invite");
   const groupIdFromQuery              = searchParams.get("group");
@@ -292,5 +292,13 @@ export default function WaitingRoomPage() {
 
       </div>
     </div>
+  );
+}
+
+export default function WaitingRoomPage() {
+  return (
+    <Suspense fallback={<div className={`${baloo.className} wr-root`} />}>
+      <WaitingRoomContent />
+    </Suspense>
   );
 }

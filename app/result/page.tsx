@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { Baloo_2 } from "next/font/google";
@@ -162,7 +162,7 @@ function WinnerScreen({
   );
 }
 
-export default function ResultPage() {
+function ResultPageContent() {
   const searchParams = useSearchParams();
   const gameMode: GameMode = searchParams.get("mode") === "restaurant" ? "restaurant" : "menu";
 
@@ -376,5 +376,13 @@ export default function ResultPage() {
         </AnimatePresence>
       </div>
     </div>
+  );
+}
+
+export default function ResultPage() {
+  return (
+    <Suspense fallback={<div className={`${baloo.className} res-root`} />}>
+      <ResultPageContent />
+    </Suspense>
   );
 }

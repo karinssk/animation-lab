@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AnimatePresence, motion, useMotionValue, useTransform } from "framer-motion";
 import { Baloo_2 } from "next/font/google";
@@ -283,7 +283,7 @@ function SwipeCard({
   );
 }
 
-export default function SwipePage() {
+function SwipePageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const entryMode = searchParams.get("mode");
@@ -635,5 +635,13 @@ export default function SwipePage() {
         </AnimatePresence>
       </div>
     </div>
+  );
+}
+
+export default function SwipePage() {
+  return (
+    <Suspense fallback={<div className={`${baloo.className} sw-root`} />}>
+      <SwipePageContent />
+    </Suspense>
   );
 }

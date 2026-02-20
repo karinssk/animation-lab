@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Baloo_2 } from "next/font/google";
 import "./appointment.css";
@@ -679,7 +679,7 @@ function ResultScreen({ appointmentName, start, end, availability, timeSuggestio
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
-export default function AppointmentSetupPage() {
+function AppointmentSetupContent() {
   const searchParams = useSearchParams();
   const entrySourceParam = searchParams.get("entry");
   const entrySource: EntrySource = entrySourceParam === "line-group" ? "line-group" : "line-oa";
@@ -733,6 +733,14 @@ export default function AppointmentSetupPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function AppointmentSetupPage() {
+  return (
+    <Suspense fallback={<div className={`${baloo.className} apt-root`} />}>
+      <AppointmentSetupContent />
+    </Suspense>
   );
 }
 

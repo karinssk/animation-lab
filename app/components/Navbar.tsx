@@ -23,6 +23,7 @@ const NAV_ITEMS = [
   { href: "/map", label: "Map Tab" },
   { href: "/preferences-setup", label: "Profile Tab" },
   { href: "/design-load", label: "Design Load" },
+  { href: "/user-journey-diagram", label: "User Journey Diagram" },
   { href: "/fast-onboarding", label: "Fast Onboarding" },
   { href: "/comments", label: "Comments" },
 ];

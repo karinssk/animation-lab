@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { Baloo_2 } from "next/font/google";
 import { motion } from "framer-motion";
@@ -92,7 +92,7 @@ const NAV_ITEMS = [
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default function ExplorePage() {
+function ExplorePageContent() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [hasActiveGame] = useState(true);
@@ -304,5 +304,13 @@ export default function ExplorePage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ExplorePage() {
+  return (
+    <Suspense fallback={<div className={`${baloo.className} ex-root`} />}>
+      <ExplorePageContent />
+    </Suspense>
   );
 }
