@@ -1,0 +1,520 @@
+/* ── Root / phone shell ───────────────────────────────────────────────────── */
+
+.gs-root {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px 14px;
+  background:
+    radial-gradient(circle at 18% 10%, #ffe2d2 0%, #fff0e8 32%, transparent 54%),
+    radial-gradient(circle at 88% 22%, #dbf8ff 0%, #ecf8ff 34%, transparent 54%),
+    #f3ece1;
+}
+
+.gs-phone {
+  position: relative;
+  width: 300px;
+  height: 620px;
+  border-radius: 46px;
+  background: #fff;
+  border: 5px solid #cfd0d4;
+  overflow: hidden;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.18);
+  display: flex;
+  flex-direction: column;
+}
+
+.gs-phone::before {
+  content: "";
+  position: absolute;
+  top: 10px; left: 50%;
+  transform: translateX(-50%);
+  width: 100px; height: 26px;
+  background: #000;
+  border-radius: 999px;
+  z-index: 100;
+}
+
+/* ── Status bar ───────────────────────────────────────────────────────────── */
+
+.gs-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px 6px;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+  background: #f2f2f3;
+}
+
+.gs-battery {
+  position: relative; width: 18px; height: 10px;
+  border: 1.5px solid #111; border-radius: 2px;
+  display: inline-flex; align-items: center; padding: 1px; box-sizing: border-box;
+}
+.gs-battery__level { width: 100%; height: 100%; background: #111; border-radius: 1px; }
+.gs-battery__cap {
+  position: absolute; right: -3px; top: 2px;
+  width: 2px; height: 4px; background: #111; border-radius: 1px;
+}
+
+/* ── Body ─────────────────────────────────────────────────────────────────── */
+
+.gs-body {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding: 0 12px;
+}
+.gs-body::-webkit-scrollbar { display: none; }
+
+/* ── Header ───────────────────────────────────────────────────────────────── */
+
+.gs-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 0 6px;
+}
+
+.gs-back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: #f4f4f5;
+  border: 1px solid #e4e4e7;
+  color: #3f3f46;
+  text-decoration: none;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.gs-header__label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #f97316;
+  margin: 0 0 2px;
+}
+
+.gs-header__title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #18181b;
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* ── Sections ─────────────────────────────────────────────────────────────── */
+
+.gs-section {
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+
+.gs-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #71717a;
+  margin-bottom: 6px;
+}
+
+.gs-label--opt {
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+  color: #a1a1aa;
+}
+
+.gs-sub-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #a1a1aa;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 4px;
+}
+
+/* ── Input ────────────────────────────────────────────────────────────────── */
+
+.gs-input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1.5px solid #e4e4e7;
+  background: #fafafa;
+  font-size: 12px;
+  font-weight: 600;
+  color: #18181b;
+  outline: none;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.gs-input:focus { border-color: #f97316; }
+.gs-input::placeholder { color: #a1a1aa; }
+
+/* ── Mode toggle ──────────────────────────────────────────────────────────── */
+
+.gs-mode-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.gs-mode-btn {
+  padding: 10px;
+  border-radius: 12px;
+  border: 1.5px solid #e4e4e7;
+  background: #fafafa;
+  font-size: 12px;
+  font-weight: 700;
+  color: #3f3f46;
+  cursor: pointer;
+  transition: all 0.12s ease;
+}
+
+.gs-mode-btn--active {
+  border-color: #f97316;
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+/* ── Group list ───────────────────────────────────────────────────────────── */
+
+.gs-group-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.gs-group-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  border: 1.5px solid #e4e4e7;
+  background: #fafafa;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  text-align: left;
+}
+
+.gs-group-row--active {
+  border-color: #f97316;
+  background: #fff7ed;
+}
+
+.gs-group-row__emoji { font-size: 20px; flex-shrink: 0; }
+
+.gs-group-row__info { flex: 1; min-width: 0; }
+
+.gs-group-row__name {
+  font-size: 12px;
+  font-weight: 700;
+  color: #18181b;
+  margin: 0;
+}
+
+.gs-group-row__meta {
+  font-size: 10px;
+  color: #a1a1aa;
+  margin: 0;
+}
+
+.gs-group-row__check {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: #f97316;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ── Game mode cards ──────────────────────────────────────────────────────── */
+
+.gs-gamemode-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.gs-gamemode-card {
+  padding: 10px 8px;
+  border-radius: 14px;
+  border: 1.5px solid #e4e4e7;
+  background: #fafafa;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  text-align: center;
+}
+
+.gs-gamemode-card--active {
+  border-color: #f97316;
+  background: #fff7ed;
+}
+
+.gs-gamemode-card__emoji { font-size: 24px; line-height: 1; display: block; margin-bottom: 4px; }
+
+.gs-gamemode-card__title {
+  font-size: 11px;
+  font-weight: 800;
+  color: #18181b;
+  margin: 0;
+}
+
+.gs-gamemode-card__sub {
+  font-size: 9px;
+  color: #a1a1aa;
+  margin: 2px 0 0;
+}
+
+/* ── Location button ──────────────────────────────────────────────────────── */
+
+.gs-location-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1.5px dashed #d4d4d8;
+  background: #fafafa;
+  font-size: 12px;
+  font-weight: 600;
+  color: #71717a;
+  cursor: pointer;
+  transition: all 0.12s ease;
+  text-align: left;
+}
+
+.gs-location-btn--pinned {
+  border-style: solid;
+  border-color: #f97316;
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+/* ── Filter toggle ────────────────────────────────────────────────────────── */
+
+.gs-filter-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1.5px solid #e4e4e7;
+  background: #fafafa;
+  font-size: 12px;
+  font-weight: 700;
+  color: #3f3f46;
+  cursor: pointer;
+}
+
+.gs-filter-toggle__arrow {
+  font-size: 9px;
+  color: #a1a1aa;
+}
+
+.gs-filters-panel {
+  margin-top: 8px;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #f0e8e0;
+  background: #fffaf6;
+  overflow: hidden;
+}
+
+/* ── Cuisine grid ─────────────────────────────────────────────────────────── */
+
+.gs-cuisine-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.gs-cuisine-pill {
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid #e4e4e7;
+  background: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  color: #3f3f46;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.gs-cuisine-pill--active {
+  border-color: #f97316;
+  background: #fff7ed;
+  color: #c2410c;
+}
+
+/* ── Diet pills ───────────────────────────────────────────────────────────── */
+
+.gs-diet-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.gs-diet-pill {
+  padding: 4px 8px;
+  border-radius: 999px;
+  border: 1px solid #e4e4e7;
+  background: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  color: #3f3f46;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.gs-diet-pill--active {
+  border-color: #7c3aed;
+  background: #f5f3ff;
+  color: #6d28d9;
+}
+
+/* ── Segment control ──────────────────────────────────────────────────────── */
+
+.gs-segment {
+  display: flex;
+  border: 1px solid #e4e4e7;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.gs-segment__btn {
+  flex: 1;
+  padding: 7px 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #71717a;
+  background: #fff;
+  border: none;
+  border-right: 1px solid #e4e4e7;
+  cursor: pointer;
+  transition: all 0.1s ease;
+}
+
+.gs-segment__btn:last-child { border-right: none; }
+
+.gs-segment__btn--active {
+  background: #fff7ed;
+  color: #c2410c;
+  font-weight: 800;
+}
+
+/* ── Preferences toggle ───────────────────────────────────────────────────── */
+
+.gs-pref-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1.5px solid #e4e4e7;
+  background: #fafafa;
+  cursor: pointer;
+  text-align: left;
+}
+
+.gs-pref-toggle__label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #18181b;
+  margin: 0;
+}
+
+.gs-pref-toggle__sub {
+  font-size: 10px;
+  color: #a1a1aa;
+  margin: 2px 0 0;
+}
+
+.gs-toggle {
+  width: 32px; height: 18px;
+  border-radius: 999px;
+  background: #d4d4d8;
+  position: relative;
+  flex-shrink: 0;
+  transition: background 0.2s ease;
+}
+
+.gs-toggle::after {
+  content: "";
+  position: absolute;
+  top: 2px; left: 2px;
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.gs-toggle--on { background: #f97316; }
+.gs-toggle--on::after { transform: translateX(14px); }
+
+/* ── Footer ───────────────────────────────────────────────────────────────── */
+
+.gs-footer {
+  flex-shrink: 0;
+  display: grid;
+  grid-template-columns: 1fr 1.6fr;
+  gap: 6px;
+  padding: 8px 12px 12px;
+  border-top: 1px solid #f0f0f0;
+  background: #fff;
+}
+
+.gs-btn-primary {
+  display: block;
+  padding: 11px 10px;
+  border-radius: 14px;
+  background: #f97316;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.gs-btn-primary:active { transform: scale(0.96); }
+
+.gs-btn-primary--disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.gs-btn-ghost {
+  display: block;
+  padding: 11px 10px;
+  border-radius: 14px;
+  background: transparent;
+  color: #71717a;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  border: 1px solid #e4e4e7;
+  cursor: pointer;
+  transition: background 0.1s ease;
+}
+
+.gs-btn-ghost:active { background: #f4f4f5; }

@@ -3,7 +3,8 @@
     "allow": [
       "Bash(npx next build:*)",
       "Bash(dir:*)",
-      "Bash(npx next dev --turbopack)"
+      "Bash(npx next dev --turbopack)",
+      "Bash(findstr:*)"
     ]
   }
 }

@@ -1,10 +1,10 @@
-import { Space_Grotesk } from "next/font/google";
+import { Baloo_2 } from "next/font/google";
 import { RestaurantSearchPage } from "./components/RestaurantSearchPage";
 import "./restaurant-search.css";
 
-const spaceGrotesk = Space_Grotesk({
+const baloo = Baloo_2({
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+  weight: ["500", "600", "700", "800"],
 });
 
 export const metadata = {
@@ -20,7 +20,7 @@ export default function Page() {
   const apiKey = process.env.GOOGLE_PLACE_API_KEY ?? "";
 
   return (
-    <div className={`${spaceGrotesk.className} min-h-screen bg-zinc-100 dark:bg-zinc-900 py-12 flex flex-col items-center`}>
+    <div className={`${baloo.className} min-h-screen bg-zinc-100 dark:bg-zinc-900 py-12 flex flex-col items-center`}>
       <div className="rs-phone-frame">
         <RestaurantSearchPage apiKey={apiKey} />
       </div>

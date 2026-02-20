@@ -3,11 +3,11 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Baloo_2 } from "next/font/google";
 import { motion } from "framer-motion";
 import "./explore.css";
 
-const jakarta = Plus_Jakarta_Sans({
+const baloo = Baloo_2({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
 });
@@ -126,7 +126,7 @@ export default function ExplorePage() {
   }, [source, entry, shortcutParam]);
 
   return (
-    <div className={`${jakarta.className} ex-root`}>
+    <div className={`${baloo.className} ex-root`}>
       <div className="ex-phone">
         <div className="ex-page">
 
@@ -231,8 +231,15 @@ export default function ExplorePage() {
                 </div>
               </section>
 
+              {/* Section divider */}
+              <div className="my-4 flex items-center gap-2">
+                <div className="h-px flex-1 bg-orange-100" />
+                <span className="text-[9px] font-extrabold uppercase tracking-[0.2em] text-orange-300">✦</span>
+                <div className="h-px flex-1 bg-orange-100" />
+              </div>
+
               {/* Trending Themes */}
-              <section className="mt-4 pb-6">
+              <section className="pb-6">
                 <div className="mb-2 flex items-center justify-between">
                   <h2 className="text-xs uppercase tracking-[0.18em] text-zinc-700">Trending Themes</h2>
                   <Link href="/swipe" className="text-xs font-bold text-orange-600">Play all</Link>

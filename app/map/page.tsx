@@ -5,11 +5,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
-import { Plus_Jakarta_Sans } from "next/font/google";
+import { Baloo_2 } from "next/font/google";
 import type L from "leaflet";
+import { PLACES } from "./places-data";
 import "./map.css";
 
-const jakarta = Plus_Jakarta_Sans({
+const baloo = Baloo_2({
   subsets: ["latin"],
   weight: ["500", "600", "700", "800"],
 });
@@ -91,75 +92,6 @@ function IconLocate() {
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
-const PLACES = [
-  {
-    id: "p1",
-    name: "Kenny's BKK - Ari",
-    category: "Burger · Western",
-    tagline: "Bangkok's most-loved comfort burgers",
-    rating: "4.7",
-    ratingCount: "1,181",
-    price: "$$",
-    distance: "0.8 km",
-    status: "Open Now",
-    hours: "11 AM – 10 PM",
-    address: "12, Soi Ari 1, Phaya Thai Rd, BKK 10400",
-    phone: "090 995 2040",
-    website: "kennysbkk.com",
-    tags: ["Dine-in", "Takeaway", "Kid-friendly", "Wifi"],
-    photos: ["/food-pizza.jpg", "/food-steak.avif", "/food-pizza.jpg"],
-    reviews: [
-      { author: "Sarah M.", stars: 5, text: "Best burgers in Bangkok — crispy fries, quick service. Will 100% return." },
-      { author: "James T.", stars: 4, text: "Great spot. Gets packed on weekends but totally worth the wait." },
-    ],
-    latlng: [13.7757, 100.5494] as [number, number],
-  },
-  {
-    id: "p2",
-    name: "Cayo Caribe",
-    category: "Seafood · Caribbean",
-    tagline: "Fresh catches with a Caribbean twist",
-    rating: "3.9",
-    ratingCount: "161",
-    price: "$$$",
-    distance: "2.1 km",
-    status: "Closed",
-    hours: "11 AM – 9 PM",
-    address: "San Juan A, Coastal Market, Bangkok",
-    phone: "02 144 8899",
-    website: "cayocaribe.co.th",
-    tags: ["Outdoor Seating", "Reservations", "Live Music"],
-    photos: ["/food-steak.avif", "/food-pizza.jpg", "/food-steak.avif"],
-    reviews: [
-      { author: "Linda P.", stars: 4, text: "Unique flavors you won't find elsewhere. The ceviche is a must-try." },
-      { author: "Mike R.", stars: 3, text: "Good food but portions are a bit small for the price." },
-    ],
-    latlng: [13.7722, 100.5452] as [number, number],
-  },
-  {
-    id: "p3",
-    name: "Spicy Squad House",
-    category: "Thai · Street Food",
-    tagline: "Fiery Thai classics in the heart of Ari",
-    rating: "4.5",
-    ratingCount: "903",
-    price: "$",
-    distance: "1.5 km",
-    status: "Open Now",
-    hours: "10 AM – 9 PM",
-    address: "Ari Soi 4, Bangkok 10400",
-    phone: "02 999 1732",
-    website: "spicysquad.th",
-    tags: ["Local Fav", "Spicy", "Cash Only", "No Reservations"],
-    photos: ["/food-pizza.jpg", "/food-steak.avif", "/food-pizza.jpg"],
-    reviews: [
-      { author: "Nat B.", stars: 5, text: "Authentic Thai food at its finest. The pad kra pao here is life-changing!" },
-      { author: "Chris W.", stars: 4, text: "Cash only but totally worth it. Order the green curry — no regrets." },
-    ],
-    latlng: [13.778, 100.5528] as [number, number],
-  },
-];
-
 const FILTER_PILLS = ["Restaurant", "Seafood", "Thai", "Halal", "Vegan"];
 
 const NAV_ITEMS = [
@@ -210,7 +142,7 @@ export default function MapPage() {
   const activePlace = PLACES.find((p) => p.id === activeId) ?? PLACES[0];
 
   return (
-    <div className={`${jakarta.className} map-root`}>
+    <div className={`${baloo.className} map-root`}>
       <div className="map-phone">
         <div className="map-page">
 
@@ -321,16 +253,28 @@ export default function MapPage() {
                   </button>
                 </div>
 
-                {/* Place Info */}
-                <div>
-                  <h1 className="text-2xl leading-7 font-extrabold text-zinc-900">{activePlace.name}</h1>
-                  <p className="text-xs text-zinc-500">{activePlace.category} · {activePlace.reviews} reviews</p>
-                  <p className="text-sm font-semibold text-zinc-700">
-                    ★ {activePlace.rating} · <span className={activePlace.status === "Open Now" ? "text-emerald-600" : "text-red-500"}>{activePlace.status}</span>
-                  </p>
+                {/* Preview: photo + identity */}
+                <div className="flex gap-3">
+                  <div className="map-sheet-thumb">
+                    <Image src={activePlace.photos[0]} alt={activePlace.name} fill style={{ objectFit: "cover" }} />
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-1">
+                      <h1 className="text-sm font-extrabold leading-tight text-zinc-900">{activePlace.name}</h1>
+                      <span className="shrink-0 rounded-full bg-zinc-100 px-1.5 py-0.5 text-[9px] font-bold text-zinc-600">{activePlace.price}</span>
+                    </div>
+                    <p className="text-[10px] text-zinc-500 mt-0.5">{activePlace.category}</p>
+                    <p className="text-[11px] font-semibold text-zinc-700 mt-0.5">
+                      ★ {activePlace.rating}
+                      <span className="ml-1 font-normal text-zinc-400">({activePlace.ratingCount})</span>
+                    </p>
+                    <p className={`text-[10px] font-bold mt-0.5 ${activePlace.status === "Open Now" ? "text-emerald-600" : "text-red-500"}`}>
+                      {activePlace.status} · {activePlace.hours}
+                    </p>
+                  </div>
                 </div>
 
-                {/* Quick Actions */}
+                {/* Quick actions */}
                 <div className="map-actions-grid">
                   <button className="map-pressable map-mini-btn">Directions</button>
                   <button className="map-pressable map-mini-btn">Call</button>
@@ -338,50 +282,24 @@ export default function MapPage() {
                   <button className="map-pressable map-mini-btn">Share</button>
                 </div>
 
-                {/* Stats row */}
-                <div className="grid grid-cols-4 divide-x divide-zinc-200 rounded-xl border border-zinc-200 bg-zinc-50 p-2 text-center">
-                  <div>
-                    <p className="text-[10px] text-zinc-500">Hours</p>
-                    <p className={`text-xs font-bold ${activePlace.status === "Open Now" ? "text-emerald-600" : "text-red-500"}`}>
-                      {activePlace.status === "Open Now" ? "Open" : "Closed"}
-                    </p>
+                {/* Top review snippet */}
+                {activePlace.reviews[0] && (
+                  <div className="rounded-xl border border-zinc-100 bg-zinc-50 px-3 py-2">
+                    <div className="flex items-center justify-between">
+                      <p className="text-[10px] font-bold text-zinc-700">{activePlace.reviews[0].author}</p>
+                      <p className="text-[9px] text-amber-500">{"★".repeat(activePlace.reviews[0].stars)}</p>
+                    </div>
+                    <p className="mt-0.5 text-[10px] text-zinc-500 leading-relaxed">&quot;{activePlace.reviews[0].text}&quot;</p>
                   </div>
-                  <div>
-                    <p className="text-[10px] text-zinc-500">Rating</p>
-                    <p className="text-xs font-bold text-zinc-800">{activePlace.rating}</p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-zinc-500">Reviews</p>
-                    <p className="text-xs font-bold text-zinc-800">{activePlace.reviews}</p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] text-zinc-500">Distance</p>
-                    <p className="text-xs font-bold text-zinc-800">1.3 km</p>
-                  </div>
-                </div>
+                )}
 
-                {/* Address / Contact */}
-                <div>
-                  <h2 className="text-sm font-extrabold text-zinc-800">Info</h2>
-                  <p className="text-sm text-zinc-600">{activePlace.address}</p>
-                  <p className="text-sm font-semibold text-sky-700">{activePlace.phone}</p>
-                  <p className="text-sm font-semibold text-sky-700">{activePlace.website}</p>
-                </div>
-
-                {/* Food photos */}
-                <div className="map-food-row">
-                  <div className="map-food"><Image src="/food-pizza.jpg" alt="Food" width={240} height={160} /></div>
-                  <div className="map-food"><Image src="/food-steak.avif" alt="Food" width={240} height={160} /></div>
-                  <div className="map-food"><Image src="/food-pizza.jpg" alt="Food" width={240} height={160} /></div>
-                </div>
-
-                {/* Reviews */}
-                <div>
-                  <h2 className="text-sm font-extrabold text-zinc-800">Ratings &amp; Reviews</h2>
-                  <p className="text-xs text-zinc-600">
-                    &quot;Average might be a tad harsh. The first meal I had here was surprisingly good and service was quick.&quot;
-                  </p>
-                </div>
+                {/* View full detail CTA */}
+                <Link
+                  href={`/map/${activePlace.id}`}
+                  className="map-pressable flex items-center justify-center gap-1.5 rounded-2xl bg-zinc-900 py-3 text-[12px] font-extrabold text-white"
+                >
+                  View Full Details →
+                </Link>
 
               </div>
             </section>

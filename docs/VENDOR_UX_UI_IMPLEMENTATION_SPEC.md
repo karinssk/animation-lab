@@ -119,6 +119,7 @@ Required UI:
 - Group source behavior:
 - If entered via LINE group, default group is fixed.
 - If entered via LINE OA, user chooses from LINE groups.
+- Group members join directly from LINE invite link (no room code input).
 - Game mode selector: Select Restaurant / Select Menu.
 - Filters (restaurant mode):
 - Meal type
@@ -144,6 +145,7 @@ Acceptance criteria:
 Required UI:
 - Informative waiting text.
 - Share link/URL action.
+- Join guidance explicitly states "tap invite link from LINE" (no code entry).
 - Member list with profile pictures.
 - Nudge friend action for non-joined members.
 - Countdown timer.
@@ -167,6 +169,11 @@ Required UI:
 - Mode indicator: Restaurant / Menu / Saved.
 - Include My Preferences checkbox.
 - Optional filter/sort controls (especially from shortcut/explore entry).
+- Swipe filter presets should include at least:
+- Saved
+- Saved with partner
+- Trendy menu
+- End-of-month budget mode (cheap-first)
 - Invite Friends button for eligible solo entry states.
 - End Game button (host only in group).
 - Card stack with swipe gestures:

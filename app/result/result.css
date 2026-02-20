@@ -1,0 +1,525 @@
+/* ── Root / phone shell ───────────────────────────────────────────────────── */
+
+.res-root {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px 14px;
+  background:
+    radial-gradient(circle at 18% 10%, #ffe2d2 0%, #fff0e8 32%, transparent 54%),
+    radial-gradient(circle at 88% 22%, #dbf8ff 0%, #ecf8ff 34%, transparent 54%),
+    #f3ece1;
+}
+
+.res-phone {
+  position: relative;
+  width: 300px;
+  height: 620px;
+  border-radius: 46px;
+  background: #fff;
+  border: 5px solid #cfd0d4;
+  overflow: hidden;
+  box-shadow: 0 24px 48px rgba(0,0,0,0.18);
+  display: flex;
+  flex-direction: column;
+}
+
+.res-phone::before {
+  content: "";
+  position: absolute;
+  top: 10px; left: 50%;
+  transform: translateX(-50%);
+  width: 100px; height: 26px;
+  background: #000;
+  border-radius: 999px;
+  z-index: 100;
+}
+
+/* ── Status bar ───────────────────────────────────────────────────────────── */
+
+.res-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px 6px;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+  background: #f2f2f3;
+  position: relative;
+  z-index: 10;
+}
+
+.res-battery {
+  position: relative; width: 18px; height: 10px;
+  border: 1.5px solid #111; border-radius: 2px;
+  display: inline-flex; align-items: center; padding: 1px; box-sizing: border-box;
+}
+.res-battery__level { width: 100%; height: 100%; background: #111; border-radius: 1px; }
+.res-battery__cap {
+  position: absolute; right: -3px; top: 2px;
+  width: 2px; height: 4px; background: #111; border-radius: 1px;
+}
+
+/* ── Step dots ────────────────────────────────────────────────────────────── */
+
+.res-steps {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 0 2px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+}
+
+.res-step {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #e4e4e7;
+  transition: all 0.25s ease;
+}
+
+.res-step--active {
+  width: 20px;
+  border-radius: 999px;
+  background: #f97316;
+}
+
+.res-step--done {
+  background: #fdba74;
+}
+
+/* ── Body ─────────────────────────────────────────────────────────────────── */
+
+.res-body {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.res-screen {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.res-screen::-webkit-scrollbar { display: none; }
+
+/* ── Header ───────────────────────────────────────────────────────────────── */
+
+.res-header {
+  padding: 14px 14px 6px;
+  flex-shrink: 0;
+}
+
+.res-header__label {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #f97316;
+  margin: 0 0 2px;
+}
+
+.res-header__title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #18181b;
+  margin: 0 0 2px;
+}
+
+.res-header__sub {
+  font-size: 11px;
+  color: #71717a;
+  margin: 0;
+}
+
+/* ── Top 3 list ───────────────────────────────────────────────────────────── */
+
+.res-top3-list {
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.res-top3-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  border: 1.5px solid #e4e4e7;
+  background: #fafafa;
+}
+
+.res-top3-card--first {
+  border-color: #fdba74;
+  background: #fff7ed;
+  box-shadow: 0 4px 12px rgba(249,115,22,0.12);
+}
+
+.res-top3-card__rank {
+  font-size: 11px;
+  font-weight: 800;
+  color: #a1a1aa;
+  width: 20px;
+  flex-shrink: 0;
+}
+
+.res-top3-card--first .res-top3-card__rank {
+  color: #f97316;
+}
+
+/* Real food thumbnail — replaces emoji */
+.res-top3-card__thumb {
+  position: relative;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #f4f4f5;
+  border: 1.5px solid #e4e4e7;
+}
+
+.res-top3-card__info { flex: 1; min-width: 0; }
+
+.res-top3-card__name {
+  font-size: 13px;
+  font-weight: 800;
+  color: #18181b;
+  margin: 0;
+}
+
+.res-top3-card__local {
+  font-size: 10px;
+  color: #a1a1aa;
+  margin: 2px 0 4px;
+}
+
+.res-top3-card__votes {
+  display: flex;
+  gap: 3px;
+  flex-wrap: wrap;
+}
+
+/* Avatar vote pill: [initials circle] + [dir badge] */
+.res-vote-dot {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  border-radius: 999px;
+  background: #f4f4f5;
+  border: 1.5px solid #e4e4e7;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.res-vote-dot__avatar {
+  font-size: 7px;
+  font-weight: 800;
+  color: #fff;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  letter-spacing: -0.02em;
+}
+
+.res-vote-dot__dir {
+  font-size: 8px;
+  width: 18px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.res-top3-card__score {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.res-top3-card__score-val {
+  font-size: 18px;
+  font-weight: 800;
+  color: #18181b;
+}
+
+.res-top3-card__score-label {
+  font-size: 8px;
+  color: #a1a1aa;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* ── Vote screen ──────────────────────────────────────────────────────────── */
+
+.res-vote-list {
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.res-vote-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 12px;
+  border-radius: 16px;
+  border: 1.5px solid #e4e4e7;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+  position: relative;
+}
+
+.res-vote-card:active:not(:disabled) { transform: scale(0.97); }
+
+.res-vote-card--voted {
+  border-color: #f97316;
+  background: #fff7ed;
+}
+
+.res-vote-card--dim { opacity: 0.5; }
+
+/* Real food thumbnail on vote card */
+.res-vote-card__thumb {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #f4f4f5;
+  border: 1.5px solid #e4e4e7;
+}
+
+.res-vote-card__info { flex: 1; min-width: 0; }
+
+.res-vote-card__name {
+  font-size: 13px;
+  font-weight: 800;
+  color: #18181b;
+  margin: 0 0 6px;
+}
+
+.res-vote-bar {
+  height: 5px;
+  background: #f4f4f5;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.res-vote-bar__fill {
+  height: 100%;
+  background: #f97316;
+  border-radius: 999px;
+}
+
+.res-vote-pct {
+  font-size: 12px;
+  font-weight: 800;
+  color: #f97316;
+  flex-shrink: 0;
+}
+
+.res-vote-check {
+  position: absolute;
+  top: -6px; right: -6px;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: #f97316;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.res-waiting-text {
+  text-align: center;
+  font-size: 12px;
+  color: #a1a1aa;
+  font-weight: 600;
+  padding: 12px 0;
+}
+
+/* ── Winner screen ────────────────────────────────────────────────────────── */
+
+.res-winner-screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 20px 24px;
+  gap: 12px;
+  text-align: center;
+}
+
+/* Winner full circular image */
+.res-winner-img-wrap {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #f4f4f5;
+  box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+}
+
+.res-winner-img-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.res-winner-info { display: flex; flex-direction: column; gap: 4px; align-items: center; }
+
+.res-winner-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: #f97316;
+  margin: 0;
+}
+
+.res-winner-name {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #18181b;
+  margin: 0;
+}
+
+.res-winner-local {
+  font-size: 12px;
+  color: #71717a;
+  margin: 0;
+}
+
+.res-winner-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  margin-top: 4px;
+}
+
+/* ── Confetti ─────────────────────────────────────────────────────────────── */
+
+.res-confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 5;
+}
+
+.res-confetti__piece {
+  position: absolute;
+  top: 0;
+  font-size: 14px;
+  line-height: 1;
+  user-select: none;
+}
+
+/* ── Footer ───────────────────────────────────────────────────────────────── */
+
+.res-footer {
+  flex-shrink: 0;
+  padding: 8px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.res-btn-primary {
+  display: block;
+  width: 100%;
+  padding: 13px;
+  border-radius: 16px;
+  background: #f97316;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+  text-decoration: none;
+}
+
+.res-btn-primary:active { transform: scale(0.97); }
+
+.res-btn-line {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  background: #06C755;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.res-btn-line:active { transform: scale(0.97); }
+
+.res-btn-line--sent {
+  background: #16a34a;
+}
+
+.res-btn-directions {
+  display: block;
+  padding: 12px;
+  border-radius: 14px;
+  background: #18181b;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+  text-decoration: none;
+  transition: transform 0.1s ease;
+}
+
+.res-btn-directions:active { transform: scale(0.97); }
+
+.res-btn-ghost {
+  display: block;
+  padding: 10px;
+  border-radius: 14px;
+  background: transparent;
+  color: #71717a;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+  border: 1px solid #e4e4e7;
+  transition: background 0.1s ease;
+}
+
+.res-btn-ghost:active { background: #f4f4f5; }

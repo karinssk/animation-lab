@@ -227,7 +227,7 @@ export default function CelebarytoryV4() {
                             onClick={() => setStage("searching")}
                             className="w-full py-3 bg-zinc-900 text-white rounded-xl font-semibold shadow-lg active:scale-95 transition-all"
                         >
-                            Let's Eat
+                            See Restaurants
                         </button>
                     </motion.div>
 

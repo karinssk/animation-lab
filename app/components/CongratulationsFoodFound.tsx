@@ -227,7 +227,7 @@ export default function CongratulationsFoodFound() {
                                     </div>
 
                                     <button className="w-full py-4 bg-zinc-900 text-white rounded-2xl font-bold text-sm shadow-lg active:scale-95 transition-transform">
-                                        Let's Eat 😋
+                                        See Restaurants
                                     </button>
                                 </motion.div>
                             )}
