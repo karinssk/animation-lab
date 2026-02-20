@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { Baloo_2 } from "next/font/google";
 import "./appointment.css";
 
@@ -14,6 +15,11 @@ const baloo = Baloo_2({
 
 type AvailStatus = "avail" | "maybe" | "unavail";
 type Screen = "setup" | "selection" | "result";
+type EntrySource = "line-group" | "line-oa";
+type SelectionPayload = {
+  availability: Record<string, AvailStatus>;
+  timeSuggestions: Record<string, string[]>;
+};
 
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
@@ -37,6 +43,15 @@ const MEMBER_MOCK_PATTERNS: AvailStatus[][] = [
   ["avail", "avail", "maybe",  "avail",  "unavail"],
   ["avail", "maybe", "avail",  "avail",  "maybe"  ],
   ["avail", "avail", "unavail","avail",  "avail"  ],
+];
+
+const TIME_SLOTS = ["12:00", "12:30", "13:00", "18:00", "18:30", "19:00", "19:30", "20:00"];
+
+const MEMBER_TIME_PATTERNS: string[][][] = [
+  [["12:00", "12:30"], ["18:00", "18:30"], ["19:00"], ["12:30", "13:00"], ["19:30"]],
+  [["12:30"], ["18:30", "19:00"], ["19:30"], ["12:00"], ["20:00"]],
+  [["13:00"], ["18:00"], ["19:00", "19:30"], ["12:00", "12:30"], ["18:30"]],
+  [["12:00", "13:00"], ["19:00"], ["18:30"], ["12:30"], ["19:30", "20:00"]],
 ];
 
 const DOW    = ["Su","Mo","Tu","We","Th","Fr","Sa"];
@@ -110,12 +125,21 @@ function IconLine() {
 
 // ─── Screen 1: Setup ─────────────────────────────────────────────────────────
 
-function SetupScreen({ onNext }: { onNext: (name: string, groupId: string, start: string, end: string) => void }) {
+function SetupScreen({
+  onNext,
+  entrySource,
+  lockedGroupId,
+}: {
+  onNext: (name: string, groupId: string, start: string, end: string) => void;
+  entrySource: EntrySource;
+  lockedGroupId: string | null;
+}) {
   const today = new Date();
   const todayKey = dateKey(today.getFullYear(), today.getMonth(), today.getDate());
+  const isGroupLocked = entrySource === "line-group" && !!lockedGroupId;
 
   const [name,      setName]      = useState("");
-  const [groupId,   setGroupId]   = useState("");
+  const [groupId,   setGroupId]   = useState(lockedGroupId ?? "");
   const [start,     setStart]     = useState("");
   const [end,       setEnd]       = useState("");
   const [pickingFor,setPickingFor]= useState<"start"|"end"|null>(null);
@@ -187,10 +211,16 @@ function SetupScreen({ onNext }: { onNext: (name: string, groupId: string, start
         {/* Group */}
         <div className="apt-field">
           <label className="apt-label">Group</label>
+          <p className="apt-group-note">
+            {isGroupLocked
+              ? "Opened via LINE Group: group is fixed and cannot be changed."
+              : "Opened via LINE OA: choose one of your LINE groups."}
+          </p>
           <div className="apt-groups">
             {MOCK_GROUPS.map(g => (
               <button key={g.id}
                 className={`apt-group-item${groupId === g.id ? " apt-group-item--selected" : ""}`}
+                disabled={isGroupLocked && g.id !== groupId}
                 onClick={() => setGroupId(g.id)}>
                 <div className="apt-group-item__avatar">{g.emoji}</div>
                 <div className="apt-group-item__info">
@@ -271,12 +301,14 @@ function SelectionScreen({ appointmentName, start, end, onBack, onSubmit }: {
   start: string;
   end: string;
   onBack: () => void;
-  onSubmit: (av: Record<string, AvailStatus>) => void;
+  onSubmit: (payload: SelectionPayload) => void;
 }) {
   const [calYear,   setCalYear]   = useState(parseKey(start).getFullYear());
   const [calMonth,  setCalMonth]  = useState(parseKey(start).getMonth());
   const [selected,  setSelected]  = useState<Set<string>>(new Set());
   const [avail,     setAvail]     = useState<Record<string, AvailStatus>>({});
+  const [timeSuggestions, setTimeSuggestions] = useState<Record<string, string[]>>({});
+  const [selectedTimes, setSelectedTimes] = useState<Set<string>>(new Set());
   const [submitted, setSubmitted] = useState(false);
 
   // members who haven't submitted yet (excluding self since self just submitted)
@@ -306,6 +338,26 @@ function SelectionScreen({ appointmentName, start, end, onBack, onSubmit }: {
     setSelected(new Set());
   }
 
+  function toggleTimeSlot(slot: string) {
+    if (submitted || selected.size === 0) return;
+    setSelectedTimes((prev) => {
+      const next = new Set(prev);
+      next.has(slot) ? next.delete(slot) : next.add(slot);
+      return next;
+    });
+  }
+
+  function applyTimeSuggestions() {
+    if (submitted || selected.size === 0 || selectedTimes.size === 0) return;
+    const slots = Array.from(selectedTimes).sort();
+    setTimeSuggestions((prev) => {
+      const next = { ...prev };
+      selected.forEach((key) => { next[key] = slots; });
+      return next;
+    });
+    setSelectedTimes(new Set());
+  }
+
   function cellCls(day: number) {
     const k = dateKey(calYear, calMonth, day);
     const cls = ["apt-cal__cell"];
@@ -324,7 +376,7 @@ function SelectionScreen({ appointmentName, start, end, onBack, onSubmit }: {
   function handleSubmit() {
     setSubmitted(true);
     setSelected(new Set());
-    onSubmit(avail);
+    onSubmit({ availability: avail, timeSuggestions });
   }
 
   return (
@@ -412,6 +464,29 @@ function SelectionScreen({ appointmentName, start, end, onBack, onSubmit }: {
 
         {/* Members + nudge — nudge only targets pending members */}
         <div>
+          {selected.size > 0 && !submitted && (
+            <div>
+              <p className="apt-label" style={{marginBottom:6}}>Suggested time (for selected dates)</p>
+              <div className="apt-time-slots">
+                {TIME_SLOTS.map((slot) => (
+                  <button
+                    key={slot}
+                    className={`apt-time-slot${selectedTimes.has(slot) ? " apt-time-slot--active" : ""}`}
+                    onClick={() => toggleTimeSlot(slot)}
+                  >
+                    {slot}
+                  </button>
+                ))}
+              </div>
+              <button
+                className="apt-time-apply-btn"
+                disabled={selectedTimes.size === 0}
+                onClick={applyTimeSuggestions}
+              >
+                Apply time to selected dates
+              </button>
+            </div>
+          )}
           <div className="flex items-center justify-between" style={{marginBottom:6}}>
             <span className="apt-label">Members ({MEMBERS.filter(m=>m.submitted).length}/{MEMBERS.length} submitted)</span>
             {pendingMembers.length > 0 && (
@@ -440,7 +515,7 @@ function SelectionScreen({ appointmentName, start, end, onBack, onSubmit }: {
             Submit Availability ✓
           </button>
         ) : (
-          <button className="apt-btn-primary" onClick={() => onSubmit(avail)}>
+          <button className="apt-btn-primary" onClick={() => onSubmit({ availability: avail, timeSuggestions })}>
             View Results →
           </button>
         )}
@@ -451,11 +526,12 @@ function SelectionScreen({ appointmentName, start, end, onBack, onSubmit }: {
 
 // ─── Screen 3: Result ─────────────────────────────────────────────────────────
 
-function ResultScreen({ appointmentName, start, end, availability, onHome }: {
+function ResultScreen({ appointmentName, start, end, availability, timeSuggestions, onHome }: {
   appointmentName: string;
   start: string;
   end: string;
   availability: Record<string, AvailStatus>;
+  timeSuggestions: Record<string, string[]>;
   onHome: () => void;
 }) {
   // Build all dates in range
@@ -464,17 +540,40 @@ function ResultScreen({ appointmentName, start, end, availability, onHome }: {
     allDates.push(dateKey(d.getFullYear(), d.getMonth(), d.getDate()));
   }
 
-  // Deterministic mock avail for other 4 members (seeded by date index)
+  // Deterministic mock avail + time suggestions for other members (seeded by date index)
   const scored = allDates.map((key, idx) => {
     const myStatus = availability[key] ?? "unavail";
     const others: AvailStatus[] = MEMBER_MOCK_PATTERNS.map(p => p[idx % p.length]);
     const all: AvailStatus[] = [myStatus, ...others];
+
+    const myTimes = (timeSuggestions[key] && timeSuggestions[key].length > 0) ? timeSuggestions[key] : ["19:00"];
+    const othersTimes = MEMBER_TIME_PATTERNS.map((pattern) => pattern[idx % pattern.length]);
+    const allTimes = [myTimes, ...othersTimes];
+
+    const slotScores = TIME_SLOTS.map((slot) => {
+      let strict = 0;
+      let soft = 0;
+      all.forEach((status, memberIdx) => {
+        const hasSlot = allTimes[memberIdx].includes(slot);
+        if (!hasSlot) return;
+        if (status === "avail") {
+          strict += 1;
+          soft += 1;
+        } else if (status === "maybe") {
+          soft += 1;
+        }
+      });
+      return { slot, strict, soft };
+    }).sort((a, b) => b.strict - a.strict || b.soft - a.soft);
+
+    const bestSlot = slotScores[0];
     const availCount = all.filter(s => s === "avail").length;
     const maybeCount = all.filter(s => s === "maybe").length;
     const total      = all.length;
-    const availPct   = availCount / total;
-    const softPct    = (availCount + maybeCount) / total;
-    return { key, availCount, maybeCount, total, availPct, softPct, all };
+    const availPct   = bestSlot.strict / total;
+    const softPct    = bestSlot.soft / total;
+
+    return { key, availCount, maybeCount, total, availPct, softPct, all, bestSlot: bestSlot.slot, strictSlotVotes: bestSlot.strict, softSlotVotes: bestSlot.soft };
   });
 
   // Tier 1: everyone available
@@ -516,6 +615,7 @@ function ResultScreen({ appointmentName, start, end, availability, onHome }: {
                   <div className="apt-result-date__left">
                     {i === 0 && <span className="apt-result-date__badge">Best pick</span>}
                     <div className="apt-result-date__day">{fmtFull(d.key)}</div>
+                    <div className="apt-result-time">{d.bestSlot} suggested time</div>
                     <div className="apt-result-date__avail">
                       ✅ {d.availCount} available
                       {d.maybeCount > 0 && <span style={{color:"#ca8a04"}}> · 🤔 {d.maybeCount} maybe</span>}
@@ -540,6 +640,7 @@ function ResultScreen({ appointmentName, start, end, availability, onHome }: {
                 {tier2.slice(0,2).map(d => (
                   <div key={d.key} className="apt-result-date apt-result-date--secondary">
                     <div className="apt-result-date__day" style={{fontSize:11}}>{fmtFull(d.key)}</div>
+                    <div className="apt-result-time">{d.bestSlot}</div>
                     <div className="apt-result-date__avail">{d.availCount}/{d.total} free</div>
                   </div>
                 ))}
@@ -556,6 +657,7 @@ function ResultScreen({ appointmentName, start, end, availability, onHome }: {
               {scored.sort((a,b) => b.softPct - a.softPct).slice(0,2).map(d => (
                 <div key={d.key} className="apt-result-date">
                   <div className="apt-result-date__day">{fmtFull(d.key)}</div>
+                  <div className="apt-result-time">{d.bestSlot} suggested time</div>
                   <div className="apt-result-date__avail" style={{color:"#9ca3af"}}>{d.availCount}/{d.total} available</div>
                 </div>
               ))}
@@ -578,11 +680,17 @@ function ResultScreen({ appointmentName, start, end, availability, onHome }: {
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function AppointmentSetupPage() {
+  const searchParams = useSearchParams();
+  const entrySourceParam = searchParams.get("entry");
+  const entrySource: EntrySource = entrySourceParam === "line-group" ? "line-group" : "line-oa";
+  const lockedGroupId = entrySource === "line-group" ? (searchParams.get("group") ?? MOCK_GROUPS[0].id) : null;
+
   const [screen,   setScreen]   = useState<Screen>("setup");
   const [aptName,  setAptName]  = useState("");
   const [start,    setStart]    = useState("");
   const [end,      setEnd]      = useState("");
   const [avail,    setAvail]    = useState<Record<string, AvailStatus>>({});
+  const [timeSuggestions, setTimeSuggestions] = useState<Record<string, string[]>>({});
 
   return (
     <div className={`${baloo.className} apt-root`}>
@@ -596,7 +704,7 @@ export default function AppointmentSetupPage() {
         </div>
         <div className="apt-body">
           {screen === "setup" && (
-            <SetupScreen onNext={(name, _gid, s, e) => {
+            <SetupScreen entrySource={entrySource} lockedGroupId={lockedGroupId} onNext={(name, _gid, s, e) => {
               setAptName(name); setStart(s); setEnd(e);
               setScreen("selection");
             }}/>
@@ -605,13 +713,21 @@ export default function AppointmentSetupPage() {
             <SelectionScreen
               appointmentName={aptName} start={start} end={end}
               onBack={() => setScreen("setup")}
-              onSubmit={av => { setAvail(av); setScreen("result"); }}
+              onSubmit={(payload) => {
+                setAvail(payload.availability);
+                setTimeSuggestions(payload.timeSuggestions);
+                setScreen("result");
+              }}
             />
           )}
           {screen === "result" && (
             <ResultScreen
-              appointmentName={aptName} start={start} end={end} availability={avail}
-              onHome={() => { setScreen("setup"); setAvail({}); }}
+              appointmentName={aptName}
+              start={start}
+              end={end}
+              availability={avail}
+              timeSuggestions={timeSuggestions}
+              onHome={() => { setScreen("setup"); setAvail({}); setTimeSuggestions({}); }}
             />
           )}
         </div>
@@ -619,3 +735,5 @@ export default function AppointmentSetupPage() {
     </div>
   );
 }
+
+
