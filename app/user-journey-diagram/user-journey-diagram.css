@@ -1,0 +1,493 @@
+﻿.uj-root {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 24px 14px;
+  background:
+    radial-gradient(circle at 18% 10%, #ffe2d2 0%, #fff0e8 32%, transparent 54%),
+    radial-gradient(circle at 88% 22%, #dbf8ff 0%, #ecf8ff 34%, transparent 54%),
+    #f3ece1;
+}
+
+.uj-desktop {
+  display: none;
+}
+
+.uj-desktop__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.uj-desktop__board {
+  margin-top: 10px;
+  border: 1px solid #e4e4e7;
+  border-radius: 20px;
+  background:
+    linear-gradient(0deg, rgba(249, 115, 22, 0.03), rgba(249, 115, 22, 0.03)),
+    #fafafa;
+  box-shadow: 0 20px 48px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.uj-back--desktop {
+  white-space: nowrap;
+  width: auto;
+  padding: 10px 14px;
+}
+
+.uj-phone {
+  position: relative;
+  width: 300px;
+  height: 620px;
+  border-radius: 46px;
+  background: #fff;
+  border: 5px solid #cfd0d4;
+  overflow: hidden;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.18);
+  display: flex;
+  flex-direction: column;
+}
+
+.uj-phone::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 26px;
+  background: #000;
+  border-radius: 999px;
+  z-index: 100;
+}
+
+.uj-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px 8px;
+  font-size: 12px;
+  font-weight: 700;
+  flex-shrink: 0;
+  background: #f2f2f3;
+}
+
+.uj-battery {
+  position: relative;
+  width: 18px;
+  height: 10px;
+  border: 1.5px solid #111;
+  border-radius: 2px;
+  display: inline-flex;
+  align-items: center;
+  padding: 1px;
+  box-sizing: border-box;
+}
+
+.uj-battery__level {
+  width: 100%;
+  height: 100%;
+  background: #111;
+  border-radius: 1px;
+}
+
+.uj-battery__cap {
+  position: absolute;
+  right: -3px;
+  top: 2px;
+  width: 2px;
+  height: 4px;
+  background: #111;
+  border-radius: 1px;
+}
+
+.uj-content {
+  flex: 1;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 12px;
+}
+
+.uj-content::-webkit-scrollbar {
+  display: none;
+}
+
+.uj-head {
+  padding: 8px 6px 2px;
+}
+
+.uj-kicker {
+  margin: 0;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #f97316;
+}
+
+.uj-title {
+  margin: 4px 0 0;
+  font-size: 1.5rem;
+  line-height: 1.1;
+  color: #18181b;
+}
+
+.uj-sub {
+  margin: 6px 0 0;
+  font-size: 11px;
+  color: #71717a;
+  line-height: 1.35;
+}
+
+.uj-list {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.uj-master,
+.uj-card {
+  border: 1px solid #e4e4e7;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.04);
+  padding: 10px;
+}
+
+.uj-map-wrap {
+  margin-top: 8px;
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid #e4e4e7;
+  background:
+    linear-gradient(0deg, rgba(249, 115, 22, 0.03), rgba(249, 115, 22, 0.03)),
+    #fafafa;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.uj-map-wrap::-webkit-scrollbar {
+  display: none;
+}
+
+.uj-map-svg {
+  width: 1020px;
+  height: 620px;
+  display: block;
+}
+
+.uj-svg-node {
+  fill: #fff;
+  stroke: #d4d4d8;
+  stroke-width: 2;
+}
+
+.uj-svg-node--start {
+  fill: #ffedd5;
+  stroke: #fdba74;
+}
+
+.uj-svg-node--action {
+  fill: #f0f9ff;
+  stroke: #7dd3fc;
+}
+
+.uj-svg-node--end {
+  fill: #ecfdf5;
+  stroke: #86efac;
+}
+
+.uj-svg-label {
+  font-size: 16px;
+  fill: #18181b;
+  font-weight: 800;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.uj-svg-sub {
+  font-size: 12px;
+  fill: #71717a;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+
+.uj-svg-edge {
+  fill: none;
+  stroke: #f97316;
+  stroke-width: 2.2;
+}
+
+.uj-card__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.uj-card__head h2 {
+  margin: 0;
+  font-size: 14px;
+  color: #18181b;
+}
+
+.uj-badge {
+  border-radius: 999px;
+  padding: 3px 7px;
+  font-size: 9px;
+  font-weight: 800;
+  color: #c2410c;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  flex-shrink: 0;
+}
+
+.uj-goal {
+  margin: 6px 0 0;
+  font-size: 11px;
+  color: #3f3f46;
+}
+
+.uj-notes {
+  margin: 4px 0 0;
+  font-size: 10px;
+  color: #a1a1aa;
+}
+
+.uj-track {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: 2px;
+}
+
+.uj-track::-webkit-scrollbar {
+  display: none;
+}
+
+.uj-node-wrap {
+  display: inline-flex;
+  align-items: center;
+}
+
+.uj-node {
+  border-radius: 12px;
+  border: 1px solid #d4d4d8;
+  background: #fafafa;
+  padding: 8px 10px;
+  font-size: 10px;
+  font-weight: 800;
+  color: #27272a;
+  white-space: nowrap;
+}
+
+.uj-arrow {
+  margin: 0 6px;
+  font-size: 11px;
+  color: #f97316;
+  font-weight: 800;
+}
+
+.uj-foot {
+  margin-top: 10px;
+  padding-bottom: 4px;
+}
+
+.uj-back {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 12px;
+  background: #18181b;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 10px;
+}
+
+.uj-coverage {
+  margin-top: 10px;
+  border: 1px solid #e4e4e7;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.04);
+  padding: 10px;
+}
+
+.uj-req-list {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.uj-req {
+  border: 1px solid #e4e4e7;
+  border-radius: 12px;
+  padding: 8px;
+  background: #fff;
+}
+
+.uj-req--vendor {
+  border-color: #fed7aa;
+  background: #fffaf5;
+}
+
+.uj-req--additional {
+  border-color: #bfdbfe;
+  background: #f8fbff;
+}
+
+.uj-req__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.uj-req__head h3 {
+  margin: 0;
+  font-size: 12px;
+  color: #18181b;
+}
+
+.uj-req__source {
+  border-radius: 999px;
+  border: 1px solid #d4d4d8;
+  background: #fff;
+  color: #3f3f46;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 6px;
+}
+
+.uj-req__anchors {
+  margin: 4px 0 0;
+  font-size: 9px;
+  font-weight: 700;
+  color: #71717a;
+}
+
+.uj-req__items {
+  margin: 6px 0 0;
+  padding-left: 16px;
+}
+
+.uj-req__items li {
+  font-size: 10px;
+  color: #3f3f46;
+  margin-bottom: 3px;
+}
+
+.uj-trace {
+  margin-top: 10px;
+  border: 1px solid #e4e4e7;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.04);
+  padding: 10px;
+}
+
+.uj-trace-wrap {
+  margin-top: 8px;
+  overflow: auto;
+  border: 1px solid #e4e4e7;
+  border-radius: 12px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.uj-trace-wrap::-webkit-scrollbar {
+  display: none;
+}
+
+.uj-trace-table {
+  width: 100%;
+  min-width: 920px;
+  border-collapse: collapse;
+  background: #fff;
+}
+
+.uj-trace-table th,
+.uj-trace-table td {
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px solid #f1f5f9;
+  padding: 8px;
+  font-size: 10px;
+  color: #334155;
+}
+
+.uj-trace-table th {
+  position: sticky;
+  top: 0;
+  background: #fff7ed;
+  color: #9a3412;
+  font-weight: 800;
+  z-index: 1;
+}
+
+.uj-trace-status {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-size: 9px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.uj-trace-status--mapped {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #86efac;
+}
+
+.uj-trace-status--partial {
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fcd34d;
+}
+
+@media (min-width: 1024px) {
+  .uj-root {
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 32px;
+  }
+
+  .uj-desktop {
+    display: block;
+    width: min(1280px, calc(100vw - 64px));
+    margin: 0 auto;
+  }
+
+  .uj-desktop .uj-map-svg {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1020 / 620;
+  }
+
+  .uj-phone {
+    display: none;
+  }
+
+  .uj-desktop .uj-coverage {
+    margin-top: 14px;
+  }
+
+  .uj-desktop .uj-req-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .uj-desktop .uj-trace {
+    margin-top: 14px;
+  }
+}

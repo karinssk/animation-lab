@@ -102,6 +102,7 @@ const WINNER_CONFETTI = Array.from({ length: 24 }).map((_, i) => ({
   color: ["#f97316", "#22c55e", "#3b82f6", "#eab308", "#ef4444", "#a855f7"][i % 6],
   drift: i % 2 === 0 ? 12 : -12,
 }));
+const FOOD_CONFETTI_ICONS = ["🍕", "🍣", "🍜", "🍤", "🍔", "🌮", "🥟", "🍩"];
 
 function WinnerScreen({
   winnerId,
@@ -125,7 +126,7 @@ function WinnerScreen({
             animate={{ y: 440, opacity: [0, 1, 1, 0], rotate: 360, x: [0, piece.drift, 0] }}
             transition={{ duration: piece.duration, delay: piece.delay, repeat: Infinity, ease: "linear" }}
           >
-            {piece.id % 3 === 0 ? "◆" : "●"}
+            {FOOD_CONFETTI_ICONS[piece.id % FOOD_CONFETTI_ICONS.length]}
           </motion.span>
         ))}
       </div>
