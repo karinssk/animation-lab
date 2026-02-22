@@ -13,48 +13,6 @@ const THEME = {
 
 // --- Sub-components for Screens ---
 
-const PhotoScreen = ({ onNext }: { onNext: () => void }) => (
-    <div className="flex flex-col items-center justify-between h-full pt-24 pb-6 px-6">
-        <div className="text-center space-y-2">
-            <h2 className="text-2xl font-bold text-zinc-900">Add your photo</h2>
-            <p className="text-sm text-zinc-500 max-w-[200px] mx-auto">
-                Add your photo — it will help your loved ones find you faster
-            </p>
-        </div>
-
-        <div className="relative">
-            {/* Ripple Effect */}
-            {[1, 2, 3].map((i) => (
-                <motion.div
-                    key={i}
-                    className="absolute inset-0 rounded-full"
-                    style={{ backgroundColor: THEME.light }}
-                    initial={{ scale: 1, opacity: 0.5 }}
-                    animate={{ scale: 1.5 + i * 0.2, opacity: 0 }}
-                    transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        delay: i * 0.4,
-                        ease: "easeOut"
-                    }}
-                />
-            ))}
-            <div className="relative w-32 h-32 rounded-full flex items-center justify-center border-4 border-white shadow-sm z-10" style={{ backgroundColor: THEME.lighter }}>
-                <span className="text-4xl">🍞</span>
-            </div>
-            <div className="absolute -bottom-2 text-xs text-zinc-400 font-medium left-1/2 -translate-x-1/2 pt-4">me</div>
-        </div>
-
-        <button
-            onClick={onNext}
-            className="w-full py-4 text-white font-bold rounded-2xl shadow-lg active:scale-95 transition-transform"
-            style={{ backgroundColor: THEME.primary, boxShadow: `0 10px 15px -3px ${THEME.light}` }}
-        >
-            Add photo
-        </button>
-    </div>
-);
-
 const NameScreen = ({ onNext }: { onNext: () => void }) => (
     <div className="flex flex-col h-full pt-24 px-6 relative">
         <h2 className="text-2xl font-bold text-zinc-900 text-center mb-8">What's your name?</h2>
@@ -106,45 +64,115 @@ const NameScreen = ({ onNext }: { onNext: () => void }) => (
     </div>
 );
 
-const PlanScreen = ({ onNext }: { onNext: () => void }) => {
-    const plans = [
-        { icon: "🚀", title: "12:12", desc: "It's new to me", color: "bg-orange-50" },
-        { icon: "📚", title: "16:8", desc: "I've tried fasting before", color: "bg-green-50" },
-        { icon: "🎓", title: "18:6", desc: "I feel very knowledgeable", color: "bg-blue-50" },
-        { icon: "⚙️", title: "Custom", desc: "Fit plan to your schedule", color: "bg-zinc-50" },
+const PreferenceScreen = ({ onNext }: { onNext: () => void }) => {
+    const DIET_OPTIONS = [
+        { id: "halal", label: "Halal" },
+        { id: "vegan", label: "Vegan" },
+        { id: "vegetarian", label: "Vegetarian" },
+        { id: "no-beef", label: "No Beef" },
+        { id: "no-pork", label: "No Pork" },
+        { id: "gluten-free", label: "Gluten-Free" },
     ];
+
+    const CUISINE_OPTIONS = [
+        { id: "thai", label: "Thai", emoji: "🇹🇭" },
+        { id: "japanese", label: "Japanese", emoji: "🍣" },
+        { id: "korean", label: "Korean", emoji: "🥩" },
+        { id: "italian", label: "Italian", emoji: "🍕" },
+        { id: "seafood", label: "Seafood", emoji: "🦞" },
+        { id: "street-food", label: "Street Food", emoji: "🌮" },
+    ];
+
+    const [selectedDiets, setSelectedDiets] = useState<Set<string>>(new Set());
+    const [selectedCuisines, setSelectedCuisines] = useState<Set<string>>(new Set());
+
+    const toggleDiet = (value: string) => {
+        setSelectedDiets((prev) => {
+            const next = new Set(prev);
+            if (next.has(value)) next.delete(value);
+            else next.add(value);
+            return next;
+        });
+    };
+
+    const toggleCuisine = (value: string) => {
+        setSelectedCuisines((prev) => {
+            const next = new Set(prev);
+            if (next.has(value)) next.delete(value);
+            else next.add(value);
+            return next;
+        });
+    };
 
     return (
         <div className="flex flex-col h-full pt-24 px-6">
-            <h2 className="text-2xl font-bold text-zinc-900 text-center mb-8">Choose fasting plan</h2>
-
-            <div className="space-y-3">
-                {plans.map((plan, i) => (
-                    <motion.button
-                        key={i}
-                        onClick={onNext}
-                        whileTap={{ scale: 0.98 }}
-                        className={`w-full p-4 rounded-2xl flex items-center gap-4 text-left transition-colors ${plan.color}`}
-                    >
-                        <div className="text-2xl">{plan.icon}</div>
-                        <div className="flex-1">
-                            <div className="font-bold text-zinc-900">{plan.title}</div>
-                            <div className="text-xs text-zinc-500 font-medium">{plan.desc}</div>
-                        </div>
-                        <div className="text-[10px] uppercase font-bold text-zinc-400 tracking-wider">Detail</div>
-                    </motion.button>
-                ))}
-            </div>
-            <div className="mt-4 text-center">
-                <span className="text-xs font-bold text-zinc-400">Show more</span>
+            <div className="text-center mb-6">
+                <h2 className="text-2xl font-bold text-zinc-900">Your food preferences</h2>
+                <p className="mt-2 text-xs font-medium text-zinc-500">
+                    Pick diet restrictions and favorite cuisines for better matches.
+                </p>
             </div>
 
-            <div className="mt-auto pb-8 opacity-50 pointer-events-none">
+            <div>
+                <p className="text-xs uppercase tracking-wider font-bold text-zinc-500 mb-2">
+                    Diet restrictions
+                </p>
+                <div className="flex flex-wrap gap-2">
+                    {DIET_OPTIONS.map((option) => {
+                        const active = selectedDiets.has(option.id);
+                        return (
+                            <button
+                                key={option.id}
+                                onClick={() => toggleDiet(option.id)}
+                                className={`rounded-full px-3 py-2 text-xs font-bold transition-colors ${active
+                                    ? "text-zinc-900 border border-amber-300"
+                                    : "text-zinc-500 border border-zinc-200"
+                                    }`}
+                                style={{ backgroundColor: active ? THEME.light : "#fff" }}
+                            >
+                                {option.label}
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
+
+            <div className="mt-5">
+                <p className="text-xs uppercase tracking-wider font-bold text-zinc-500 mb-2">
+                    Favorite cuisines
+                </p>
+                <div className="grid grid-cols-2 gap-2">
+                    {CUISINE_OPTIONS.map((option) => {
+                        const active = selectedCuisines.has(option.id);
+                        return (
+                            <button
+                                key={option.id}
+                                onClick={() => toggleCuisine(option.id)}
+                                className={`rounded-2xl px-3 py-3 text-left transition-colors border ${active ? "border-amber-300" : "border-zinc-200"
+                                    }`}
+                                style={{ backgroundColor: active ? THEME.lighter : "#fff" }}
+                            >
+                                <div className="text-lg leading-none">{option.emoji}</div>
+                                <div className="mt-1 text-xs font-bold text-zinc-800">{option.label}</div>
+                            </button>
+                        );
+                    })}
+                </div>
+            </div>
+
+            <div className="mt-auto pb-8 space-y-3">
                 <button
-                    className="w-full py-4 text-white font-bold rounded-2xl shadow-lg"
-                    style={{ backgroundColor: THEME.primary }}
+                    onClick={onNext}
+                    className="w-full py-4 text-white font-bold rounded-2xl shadow-lg active:scale-95 transition-transform"
+                    style={{ backgroundColor: THEME.primary, boxShadow: `0 10px 15px -3px ${THEME.light}` }}
                 >
-                    Continue (Select Plan)
+                    Continue
+                </button>
+                <button
+                    onClick={onNext}
+                    className="w-full py-2 text-xs font-bold text-zinc-400"
+                >
+                    Skip for now
                 </button>
             </div>
         </div>
@@ -257,9 +285,10 @@ const TimeScreen = ({ onNext }: { onNext: () => void }) => {
 
 export default function FastOnboardingAnimation() {
     const [step, setStep] = useState(0);
+    const TOTAL_STEPS = 3;
 
     const nextStep = () => {
-        setStep((prev) => (prev + 1) % 4);
+        setStep((prev) => (prev + 1) % TOTAL_STEPS);
     };
 
     const prevStep = () => {
@@ -269,7 +298,7 @@ export default function FastOnboardingAnimation() {
     // Auto-play logic
     useEffect(() => {
         const timer = setTimeout(() => {
-            setStep((prev) => (prev + 1) % 4);
+            setStep((prev) => (prev + 1) % TOTAL_STEPS);
         }, 3000); // 3 seconds per step
         return () => clearTimeout(timer);
     }, [step]);
@@ -303,18 +332,6 @@ export default function FastOnboardingAnimation() {
                     <AnimatePresence mode="wait">
                         {step === 0 && (
                             <motion.div
-                                key="photo"
-                                className="w-full h-full"
-                                initial={{ x: 20, opacity: 0 }}
-                                animate={{ x: 0, opacity: 1 }}
-                                exit={{ x: -20, opacity: 0 }}
-                                transition={{ duration: 0.3 }}
-                            >
-                                <PhotoScreen onNext={nextStep} />
-                            </motion.div>
-                        )}
-                        {step === 1 && (
-                            <motion.div
                                 key="name"
                                 className="w-full h-full"
                                 initial={{ x: 20, opacity: 0 }}
@@ -325,19 +342,19 @@ export default function FastOnboardingAnimation() {
                                 <NameScreen onNext={nextStep} />
                             </motion.div>
                         )}
-                        {step === 2 && (
+                        {step === 1 && (
                             <motion.div
-                                key="plan"
+                                key="preferences"
                                 className="w-full h-full"
                                 initial={{ x: 20, opacity: 0 }}
                                 animate={{ x: 0, opacity: 1 }}
                                 exit={{ x: -20, opacity: 0 }}
                                 transition={{ duration: 0.3 }}
                             >
-                                <PlanScreen onNext={nextStep} />
+                                <PreferenceScreen onNext={nextStep} />
                             </motion.div>
                         )}
-                        {step === 3 && (
+                        {step === 2 && (
                             <motion.div
                                 key="time"
                                 className="w-full h-full"
@@ -354,7 +371,7 @@ export default function FastOnboardingAnimation() {
 
                 {/* Progress Dots (Optional, visual cue) */}
                 <div className="absolute top-16 left-1/2 -translate-x-1/2 flex gap-1">
-                    {[0, 1, 2, 3].map(i => (
+                    {[0, 1, 2].map(i => (
                         <div
                             key={i}
                             className={`w-1 h-1 rounded-full transition-colors ${i === step ? 'bg-zinc-800' : 'bg-zinc-200'}`}
@@ -366,7 +383,7 @@ export default function FastOnboardingAnimation() {
 
             {/* Frame Indicator (Outside phone, matching WalletAnimationV2 style) */}
             <div className="mt-4 flex items-center gap-2">
-                {[0, 1, 2, 3].map((i) => (
+                {[0, 1, 2].map((i) => (
                     <div
                         key={i}
                         className={`h-2 w-2 rounded-full transition-all duration-300 ${i === step ? "scale-125" : "bg-zinc-300"
@@ -379,3 +396,4 @@ export default function FastOnboardingAnimation() {
         </div>
     );
 }
+

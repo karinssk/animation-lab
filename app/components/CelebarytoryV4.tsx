@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
+import ObjectViewer from "./ObjectViewer";
 
 // ============================================================
 // SVG INGREDIENTS (V3 Style re-used)
@@ -156,16 +157,14 @@ export default function CelebarytoryV4() {
                             animate={{ scale: 1, rotate: 0 }}
                             transition={{ duration: 0.6, type: "spring", bounce: 0.5 }}
                         >
-                            <div className="w-56 h-56 bg-white rounded-full shadow-2xl flex items-center justify-center border-4 border-white overflow-hidden relative">
+                            <div className="w-56 h-56 bg-zinc-100 rounded-full shadow-2xl flex items-center justify-center border-4 border-white overflow-hidden relative">
                                 {/* Badge */}
                                 <div className="absolute top-4 right-8 z-30 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-md transform rotate-12">
                                     100% MATCH
                                 </div>
-                                <img
-                                    src="/food-pizza.jpg"
-                                    alt="Pizza Match"
-                                    className="w-full h-full object-cover"
-                                />
+                                <div className="w-full h-full scale-125">
+                                    <ObjectViewer modelPath="/models/base.obj" height="100%" background="transparent" />
+                                </div>
                             </div>
                         </motion.div>
                     </div>

@@ -4,7 +4,9 @@
       "Bash(npx next build:*)",
       "Bash(dir:*)",
       "Bash(npx next dev --turbopack)",
-      "Bash(findstr:*)"
+      "Bash(findstr:*)",
+      "Bash(npx tsc:*)",
+      "Bash(curl:*)"
     ]
   }
 }

@@ -18,14 +18,15 @@ const PHASE_DURATIONS: Record<number, number> = {
 };
 
 // Magnifying glass position per phase (% of content area)
+// Covers all corners + edges so the glass searches everywhere
 const GLASS_POSITIONS: Record<number, { x: number; y: number; rotate: number }> = {
-  1: { x: 50, y: 40, rotate: 0 },
-  2: { x: 22, y: 18, rotate: -10 },
-  3: { x: 75, y: 18, rotate: 8 },
-  4: { x: 72, y: 45, rotate: 12 },
-  5: { x: 65, y: 65, rotate: 5 },
-  6: { x: 22, y: 60, rotate: -8 },
-  7: { x: 45, y: 42, rotate: -3 },
+  1: { x: 20, y: 15, rotate: -12 }, // top-left
+  2: { x: 78, y: 12, rotate: 10  }, // top-right
+  3: { x: 82, y: 72, rotate: 14  }, // bottom-right
+  4: { x: 18, y: 75, rotate: -10 }, // bottom-left
+  5: { x: 50, y: 15, rotate: 0   }, // top-center
+  6: { x: 50, y: 75, rotate: 5   }, // bottom-center
+  7: { x: 50, y: 45, rotate: -4  }, // center (final "found" pose)
 };
 
 const LENS_DIAMETER = 52; // px — diameter of visible food reveal area (matches SVG lens)
@@ -37,162 +38,22 @@ const GLASS_RADIUS = GLASS_SIZE / 2;
 const GLASS_EDGE_PADDING = 6;
 
 // ============================================================
-// FOOD SVG ICONS (reused from WalletAnimation patterns)
+// EMOJI FOOD ICON — same type as WalletAnimationV2
 // ============================================================
 
-function BurgerIcon({ size = 32 }: { size?: number }) {
+function FoodEmoji({ emoji, size = 24 }: { emoji: string; size?: number }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 40 40">
-      <path d="M8 18 Q8 8 20 8 Q32 8 32 18Z" fill="#D97706" />
-      <ellipse cx="14" cy="13" rx="1.5" ry="1" fill="#FDE68A" />
-      <ellipse cx="22" cy="11" rx="1.5" ry="1" fill="#FDE68A" />
-      <ellipse cx="27" cy="14" rx="1.5" ry="1" fill="#FDE68A" />
-      <path d="M6 18 Q10 22 14 18 Q18 22 22 18 Q26 22 30 18 Q34 22 34 19 L6 19Z" fill="#22C55E" />
-      <path d="M7 20 L33 20 L35 23 L5 23Z" fill="#FCD34D" />
-      <rect x="8" y="23" width="24" height="5" fill="#92400E" rx="2" />
-      <path d="M8 28 L32 28 Q32 34 20 34 Q8 34 8 28Z" fill="#D97706" />
-    </svg>
-  );
-}
-
-function PizzaIcon({ size = 28 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 32 32">
-      <path d="M16 2 L30 28 Q16 32 2 28Z" fill="#D97706" />
-      <path d="M16 5 L28 27 Q16 30 4 27Z" fill="#FCD34D" />
-      <circle cx="14" cy="18" r="2.5" fill="#DC2626" />
-      <circle cx="20" cy="22" r="2.5" fill="#DC2626" />
-      <circle cx="17" cy="12" r="2" fill="#DC2626" />
-      <ellipse cx="10" cy="23" rx="2" ry="1.2" fill="#16A34A" transform="rotate(-20 10 23)" />
-    </svg>
-  );
-}
-
-function FriesIcon({ size = 28 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 32 36">
-      <rect x="8" y="2" width="3" height="18" rx="1" fill="#FCD34D" transform="rotate(-8 9 10)" />
-      <rect x="13" y="1" width="3" height="19" rx="1" fill="#FBBF24" />
-      <rect x="18" y="2" width="3" height="18" rx="1" fill="#FCD34D" transform="rotate(5 19 10)" />
-      <rect x="22" y="4" width="3" height="16" rx="1" fill="#F59E0B" transform="rotate(10 23 12)" />
-      <path d="M4 16 L28 16 L26 34 Q16 36 6 34Z" fill="#DC2626" />
-      <path d="M4 16 L28 16 L27 20 L5 20Z" fill="#EF4444" />
-    </svg>
-  );
-}
-
-function DonutIcon({ size = 28 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 32 32">
-      <circle cx="16" cy="16" r="14" fill="#D97706" />
-      <path d="M4 14 Q4 3 16 3 Q28 3 28 14 Q26 18 16 17 Q6 18 4 14Z" fill="#EC4899" />
-      <circle cx="16" cy="14" r="5" fill="#FEF3C7" />
-      <rect x="8" y="8" width="3" height="1.5" rx="0.5" fill="#3B82F6" transform="rotate(30 9 8)" />
-      <rect x="20" y="7" width="3" height="1.5" rx="0.5" fill="#22C55E" transform="rotate(-20 21 7)" />
-      <rect x="12" y="5" width="3" height="1.5" rx="0.5" fill="#F59E0B" transform="rotate(45 13 5)" />
-      <rect x="22" y="12" width="3" height="1.5" rx="0.5" fill="#EF4444" transform="rotate(-40 23 12)" />
-    </svg>
-  );
-}
-
-function DumplingIcon({ size = 28 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 32 28">
-      <ellipse cx="16" cy="18" rx="14" ry="9" fill="#FEF3C7" />
-      <ellipse cx="16" cy="18" rx="14" ry="9" fill="none" stroke="#D97706" strokeWidth="1" />
-      <path d="M5 14 Q8 8 11 12 Q14 6 16 12 Q18 6 21 12 Q24 8 27 14" stroke="#D97706" strokeWidth="1.2" fill="none" strokeLinecap="round" />
-      <circle cx="12" cy="19" r="1.2" fill="#92400E" />
-      <circle cx="20" cy="19" r="1.2" fill="#92400E" />
-      <path d="M14 22 Q16 24 18 22" stroke="#92400E" strokeWidth="1" fill="none" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function NoodleBowlIcon({ size = 36 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 40 36">
-      <rect x="26" y="1" width="1.5" height="20" rx="0.5" fill="#D97706" transform="rotate(15 27 10)" />
-      <rect x="29" y="1" width="1.5" height="20" rx="0.5" fill="#B45309" transform="rotate(25 30 10)" />
-      <path d="M10 14 Q12 10 14 14 Q16 10 18 14" stroke="#FCD34D" strokeWidth="2" fill="none" strokeLinecap="round" />
-      <path d="M18 13 Q20 9 22 13 Q24 9 26 13" stroke="#FBBF24" strokeWidth="2" fill="none" strokeLinecap="round" />
-      <path d="M2 16 L38 16 L34 32 Q20 36 6 32Z" fill="#EF4444" />
-      <path d="M2 16 L38 16 L37 20 L3 20Z" fill="#DC2626" />
-    </svg>
-  );
-}
-
-function SushiIcon({ size = 28 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 28 28">
-      <circle cx="14" cy="14" r="12" fill="#1F2937" />
-      <circle cx="14" cy="14" r="10" fill="white" />
-      <circle cx="14" cy="14" r="7" fill="#FB923C" />
-      <circle cx="14" cy="14" r="4" fill="#EF4444" />
-    </svg>
-  );
-}
-
-function TacoIcon({ size = 28 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 32 28">
-      <path d="M3 22 Q3 8 16 8 Q29 8 29 22Z" fill="#FCD34D" />
-      <path d="M6 20 Q6 12 16 12 Q26 12 26 20Z" fill="#D97706" />
-      <circle cx="11" cy="17" r="2" fill="#DC2626" />
-      <circle cx="18" cy="16" r="1.8" fill="#22C55E" />
-      <circle cx="22" cy="18" r="1.5" fill="#FBBF24" />
-      <path d="M3 22 Q3 8 16 8 Q29 8 29 22" fill="none" stroke="#B45309" strokeWidth="1.5" />
-    </svg>
-  );
-}
-
-function ChiliIcon({ size = 20 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 16 28">
-      <path d="M8 6 Q6 4 8 2 Q10 0 9 2 Q12 4 8 6Z" fill="#16A34A" />
-      <path d="M5 6 Q3 14 4 20 Q5 26 8 26 Q11 26 12 20 Q13 14 11 6Z" fill="#DC2626" />
-      <path d="M6 7 Q5 14 6 18 Q7 22 8 22" stroke="#EF4444" strokeWidth="1.5" fill="none" opacity="0.5" />
-    </svg>
-  );
-}
-
-function CakeIcon({ size = 28 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 32 32">
-      <rect x="4" y="14" width="24" height="14" rx="3" fill="#FBBF24" />
-      <rect x="4" y="14" width="24" height="5" rx="2" fill="#EC4899" />
-      <rect x="6" y="12" width="20" height="4" rx="2" fill="#FDE68A" />
-      <rect x="14" y="4" width="4" height="10" rx="1" fill="#D97706" />
-      <ellipse cx="16" cy="4" rx="3" ry="2" fill="#F97316" />
-      <circle cx="16" cy="3" r="1.5" fill="#FBBF24" />
-    </svg>
-  );
-}
-
-function CoffeeIcon({ size = 28 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 32 32">
-      <path d="M6 10 L26 10 L24 28 Q16 30 8 28Z" fill="#F5F5F4" />
-      <path d="M6 10 L26 10 L25 14 L7 14Z" fill="#E7E5E4" />
-      <path d="M26 14 Q32 14 32 20 Q32 26 26 24" stroke="#D6D3D1" strokeWidth="2" fill="none" />
-      <ellipse cx="16" cy="11" rx="9" ry="2" fill="#92400E" />
-      <path d="M12 5 Q14 2 12 0" stroke="#D6D3D1" strokeWidth="1" fill="none" />
-      <path d="M16 4 Q18 1 16 -1" stroke="#D6D3D1" strokeWidth="1" fill="none" />
-      <path d="M20 5 Q22 2 20 0" stroke="#D6D3D1" strokeWidth="1" fill="none" />
-    </svg>
-  );
-}
-
-function IceCreamIcon({ size = 28 }: { size?: number }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 28 36">
-      <path d="M8 18 L14 34 L20 18Z" fill="#D97706" />
-      <line x1="9" y1="20" x2="13" y2="32" stroke="#B45309" strokeWidth="0.5" />
-      <line x1="19" y1="20" x2="15" y2="32" stroke="#B45309" strokeWidth="0.5" />
-      <circle cx="14" cy="14" r="8" fill="#FBBF24" />
-      <circle cx="10" cy="10" r="4" fill="#EC4899" />
-      <circle cx="18" cy="12" r="3.5" fill="#A7F3D0" />
-      <circle cx="14" cy="7" r="3" fill="#FDE68A" />
-    </svg>
+    <span
+      role="img"
+      style={{
+        fontSize: size,
+        lineHeight: 1,
+        display: "block",
+        filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.15))",
+      }}
+    >
+      {emoji}
+    </span>
   );
 }
 
@@ -238,50 +99,71 @@ function MagnifyingGlassSVG({ size = 80 }: { size?: number }) {
 }
 
 // ============================================================
-// BACKGROUND FOOD ITEMS
+// BACKGROUND FOOD ITEMS — scattered across the whole area
 // ============================================================
 
 interface FoodItem {
   id: string;
-  icon: React.ReactNode;
-  x: number; // % position
-  y: number; // % position
+  emoji: string;
+  size: number;
+  x: number; // px position within 240×180 area
+  y: number; // px position within 240×180 area
 }
 
+// Positions are in px within the 240×180 animation area
+// Grid-like scatter ensures even coverage with no empty zones
 const FOOD_ITEMS: FoodItem[] = [
-  // Cluster A: near phase 2 (top-left)
-  { id: "burger",    icon: <BurgerIcon size={28} />,      x: 18, y: 17 },
-  { id: "fries",     icon: <FriesIcon size={22} />,       x: 24, y: 20 },
-  { id: "dumpling",  icon: <DumplingIcon size={24} />,    x: 14, y: 24 },
-  { id: "coffee",    icon: <CoffeeIcon size={20} />,      x: 28, y: 15 },
-  { id: "pizza",     icon: <PizzaIcon size={20} />,       x: 30, y: 26 },
+  // Row 1 (y ~10px)
+  { id: "f1",  emoji: "🍔", size: 20, x: 10,  y: 5  },
+  { id: "f2",  emoji: "🍕", size: 18, x: 50,  y: 8  },
+  { id: "f3",  emoji: "🥟", size: 20, x: 95,  y: 4  },
+  { id: "f4",  emoji: "🍜", size: 18, x: 140, y: 7  },
+  { id: "f5",  emoji: "🍣", size: 20, x: 185, y: 5  },
+  { id: "f6",  emoji: "🌮", size: 18, x: 220, y: 8  },
 
-  // Cluster B: near phase 3 (top-right)
-  { id: "donut",     icon: <DonutIcon size={22} />,       x: 72, y: 16 },
-  { id: "noodle",    icon: <NoodleBowlIcon size={26} />,  x: 78, y: 22 },
-  { id: "sushi",     icon: <SushiIcon size={20} />,       x: 68, y: 24 },
-  { id: "cake",      icon: <CakeIcon size={20} />,        x: 82, y: 15 },
-  { id: "taco",      icon: <TacoIcon size={20} />,        x: 86, y: 27 },
+  // Row 2 (y ~35px)
+  { id: "f7",  emoji: "🍩", size: 18, x: 28,  y: 30 },
+  { id: "f8",  emoji: "🍛", size: 20, x: 72,  y: 28 },
+  { id: "f9",  emoji: "🌭", size: 18, x: 118, y: 32 },
+  { id: "f10", emoji: "🍤", size: 16, x: 162, y: 28 },
+  { id: "f11", emoji: "🥠", size: 18, x: 205, y: 31 },
 
-  // Cluster C: near phase 4 and 7 (center-right / center)
-  { id: "icecream",  icon: <IceCreamIcon size={20} />,    x: 70, y: 40 },
-  { id: "pizza2",    icon: <PizzaIcon size={18} />,       x: 76, y: 45 },
-  { id: "burger2",   icon: <BurgerIcon size={20} />,      x: 62, y: 43 },
-  { id: "chili",     icon: <ChiliIcon size={16} />,       x: 54, y: 40 },
-  { id: "dumpling2", icon: <DumplingIcon size={20} />,    x: 47, y: 45 },
+  // Row 3 (y ~60px)
+  { id: "f12", emoji: "🥡", size: 20, x: 8,   y: 56 },
+  { id: "f13", emoji: "🥮", size: 18, x: 55,  y: 60 },
+  { id: "f14", emoji: "🍟", size: 18, x: 100, y: 57 },
+  { id: "f15", emoji: "🍔", size: 20, x: 148, y: 60 },
+  { id: "f16", emoji: "🍕", size: 18, x: 192, y: 56 },
+  { id: "f17", emoji: "🥟", size: 16, x: 228, y: 60 },
 
-  // Cluster D: near phase 5 (bottom-right)
-  { id: "coffee2",   icon: <CoffeeIcon size={18} />,      x: 62, y: 61 },
-  { id: "fries2",    icon: <FriesIcon size={18} />,       x: 70, y: 65 },
-  { id: "pizza3",    icon: <PizzaIcon size={18} />,       x: 74, y: 58 },
-  { id: "donut2",    icon: <DonutIcon size={18} />,       x: 58, y: 68 },
+  // Row 4 (y ~88px)
+  { id: "f18", emoji: "🍜", size: 20, x: 30,  y: 84 },
+  { id: "f19", emoji: "🌮", size: 18, x: 78,  y: 87 },
+  { id: "f20", emoji: "🍛", size: 20, x: 122, y: 84 },
+  { id: "f21", emoji: "🍤", size: 16, x: 170, y: 88 },
+  { id: "f22", emoji: "🌭", size: 18, x: 212, y: 85 },
 
-  // Cluster E: near phase 6 (bottom-left)
-  { id: "sushi2",    icon: <SushiIcon size={18} />,       x: 16, y: 60 },
-  { id: "cake2",     icon: <CakeIcon size={18} />,        x: 22, y: 66 },
-  { id: "icecream2", icon: <IceCreamIcon size={16} />,    x: 28, y: 62 },
-  { id: "taco2",     icon: <TacoIcon size={18} />,        x: 18, y: 70 },
-  { id: "chili2",    icon: <ChiliIcon size={14} />,       x: 30, y: 56 },
+  // Row 5 (y ~115px)
+  { id: "f23", emoji: "🍣", size: 18, x: 12,  y: 112 },
+  { id: "f24", emoji: "🍩", size: 20, x: 58,  y: 115 },
+  { id: "f25", emoji: "🥠", size: 18, x: 105, y: 112 },
+  { id: "f26", emoji: "🥡", size: 20, x: 152, y: 115 },
+  { id: "f27", emoji: "🥮", size: 16, x: 198, y: 112 },
+  { id: "f28", emoji: "🍟", size: 18, x: 228, y: 116 },
+
+  // Row 6 (y ~142px)
+  { id: "f29", emoji: "🍔", size: 18, x: 35,  y: 140 },
+  { id: "f30", emoji: "🍕", size: 20, x: 82,  y: 143 },
+  { id: "f31", emoji: "🌮", size: 18, x: 128, y: 140 },
+  { id: "f32", emoji: "🍜", size: 20, x: 175, y: 143 },
+  { id: "f33", emoji: "🌶️", size: 16, x: 218, y: 140 },
+
+  // Row 7 (y ~165px)
+  { id: "f34", emoji: "🥟", size: 18, x: 10,  y: 162 },
+  { id: "f35", emoji: "🍤", size: 16, x: 60,  y: 165 },
+  { id: "f36", emoji: "🍣", size: 18, x: 108, y: 162 },
+  { id: "f37", emoji: "🍛", size: 20, x: 158, y: 165 },
+  { id: "f38", emoji: "🥭", size: 18, x: 205, y: 162 },
 ];
 
 // ============================================================
@@ -433,13 +315,13 @@ export default function MagnifyingGlassMotion() {
                               key={item.id}
                               className="absolute"
                               style={{
-                                left: `${item.x}%`,
-                                top: `${item.y}%`,
+                                left: `${item.x}px`,
+                                top: `${item.y}px`,
                                 opacity: 0.85,
                                 transform: "scale(1.15)",
                               }}
                             >
-                              {item.icon}
+                              <FoodEmoji emoji={item.emoji} size={item.size} />
                             </div>
                           ))}
                         </motion.div>

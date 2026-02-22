@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { useState, useEffect } from "react";
+import ObjectViewer from "./ObjectViewer";
 
 // ============================================================
 // SVG INGREDIENTS
@@ -193,17 +194,9 @@ export default function Celebarytory() {
                                         { duration: 3, repeat: Infinity, ease: "easeInOut" } // Idle float slower
                             }
                         >
-                            <svg width="80" height="80" viewBox="0 0 100 100" fill="none">
-                                {/* Cute Ghost Body */}
-                                <path d="M15 50C15 25 30 10 50 10C70 10 85 25 85 50V90L70 80L50 90L30 80L15 90V50Z" fill="white" />
-                                {/* Face */}
-                                <circle cx="35" cy="45" r="4" fill="#18181B" />
-                                <circle cx="65" cy="45" r="4" fill="#18181B" />
-                                <path d="M45 55Q50 60 55 55" stroke="#18181B" strokeWidth="3" strokeLinecap="round" />
-                                {/* Blush */}
-                                <circle cx="30" cy="55" r="3" fill="#FECDD3" opacity="0.6" />
-                                <circle cx="70" cy="55" r="3" fill="#FECDD3" opacity="0.6" />
-                            </svg>
+                            <div className="w-40 h-40 flex items-center justify-center">
+                                <ObjectViewer modelPath="/models/base.obj" height="100%" background="transparent" />
+                            </div>
                         </motion.div>
 
                         {/* Ingredient Confetti Burst */}

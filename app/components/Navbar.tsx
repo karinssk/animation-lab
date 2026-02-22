@@ -5,28 +5,47 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
-const NAV_ITEMS = [
-  { href: "/", label: "Scroll" },
-  { href: "/home-screen-v2", label: "Toast Home" },
-  { href: "/create-wallet-pages", label: "Wallet V1 (SVG)" },
-  { href: "/create-wallet-pages-v2", label: "Wallet V2 (Emoji)" },
+type NavStatus = "updated" | "no_update" | "waiting";
 
-  { href: "/magnifying-glass-motion", label: "Magnifying Glass" },
+type NavItem = {
+  href: string;
+  label: string;
+  status: NavStatus;
+  note?: string;
+};
 
-  { href: "/congratulations-food-found", label: "Food Found" },
-  { href: "/wallet-reveal", label: "Wallet Reveal" },
-  { href: "/celebarytory", label: "Celebratory" },
-  { href: "/celebratory-v2", label: "Celebratory V2" },
-  { href: "/celebratory-v3", label: "Celebratory V3" },
-  { href: "/celebratory-v4", label: "Celebratory V4" },
-  { href: "/explore", label: "Explore Tab" },
-  { href: "/map", label: "Map Tab" },
-  { href: "/preferences-setup", label: "Profile Tab" },
-  { href: "/design-load", label: "Design Load" },
-  { href: "/user-journey-diagram", label: "User Journey Diagram" },
-  { href: "/fast-onboarding", label: "Fast Onboarding" },
-  { href: "/comments", label: "Comments" },
+const NAV_ITEMS: NavItem[] = [
+  { href: "/", label: "Scroll", status: "no_update" },
+  { href: "/home-screen-v2", label: "Toast Home", status: "updated" },
+  { href: "/create-wallet-pages", label: "Wallet V1 (SVG)", status: "updated", note: "Need mascot" },
+  { href: "/magnifying-glass-motion", label: "Magnifying Glass", status: "updated" },
+  { href: "/congratulations-food-found", label: "Food Found", status: "updated", note: "Optional super-likes" },
+  { href: "/swipe", label: "Swipe V1", status: "updated", note: "Split from Toast Home" },
+  { href: "/swipe-v2", label: "Swipe V2", status: "no_update", note: "Split from Toast Home" },
+  { href: "/result", label: "Result V1", status: "no_update", note: "Split from Toast Home" },
+  { href: "/result-v2", label: "Result V2", status: "updated", note: "New result" },
+  { href: "/wallet-reveal", label: "Wallet Reveal", status: "waiting" },
+  { href: "/explore", label: "Explore Tab", status: "no_update", note: "Split from Toast Home" },
+  { href: "/map", label: "Map Tab", status: "no_update", note: "Split from Toast Home" },
+  { href: "/preferences-setup", label: "Profile Tab", status: "no_update", note: "Split from Toast Home" },
+  { href: "/user-journey-diagram", label: "User Journey Diagram", status: "no_update" },
+  { href: "/fast-onboarding", label: "Fast Onboarding", status: "updated" },
+  { href: "/comments", label: "Comments", status: "no_update" },
 ];
+
+const NAV_GROUPS: Array<{
+  title: string;
+  status: NavStatus;
+  badgeClass: string;
+}> = [
+    { title: "Updated", status: "updated", badgeClass: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" },
+    { title: "No Update", status: "no_update", badgeClass: "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300" },
+    { title: "Waiting", status: "waiting", badgeClass: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300" },
+  ];
+
+function getItemsByStatus(status: NavStatus) {
+  return NAV_ITEMS.filter((item) => item.status === status);
+}
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -69,19 +88,42 @@ export default function Navbar() {
               className="border-t border-zinc-200 bg-white/95 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/95 overflow-hidden"
             >
               <div className="flex flex-col p-4 gap-2 max-h-[calc(100vh-3.5rem)] overflow-y-auto">
-                {NAV_ITEMS.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    onClick={() => setIsOpen(false)}
-                    className={`rounded-lg px-4 py-3 text-sm font-medium transition-colors ${pathname === item.href
-                      ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
-                      : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
-                      }`}
-                  >
-                    {item.label}
-                  </Link>
-                ))}
+                {NAV_GROUPS.map((group) => {
+                  const items = getItemsByStatus(group.status);
+                  if (items.length === 0) return null;
+
+                  return (
+                    <div key={group.status} className="space-y-1.5">
+                      <div className="flex items-center justify-between px-1 pt-1">
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                          {group.title}
+                        </p>
+                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${group.badgeClass}`}>
+                          {items.length}
+                        </span>
+                      </div>
+
+                      {items.map((item) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => setIsOpen(false)}
+                          className={`block rounded-lg px-4 py-2.5 transition-colors ${pathname === item.href
+                            ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
+                            : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
+                            }`}
+                        >
+                          <span className="block text-sm font-medium">{item.label}</span>
+                          {item.note && (
+                            <span className={`mt-0.5 block text-[10px] ${pathname === item.href ? "text-zinc-300 dark:text-zinc-600" : "text-zinc-400 dark:text-zinc-500"}`}>
+                              {item.note}
+                            </span>
+                          )}
+                        </Link>
+                      ))}
+                    </div>
+                  );
+                })}
               </div>
             </motion.div>
           )}
@@ -96,18 +138,41 @@ export default function Navbar() {
           </Link>
         </div>
         <div className="flex h-[calc(100%-4.5rem)] flex-col gap-1 overflow-y-auto pr-1">
-          {NAV_ITEMS.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${pathname === item.href
-                ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
-                : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
-                }`}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {NAV_GROUPS.map((group) => {
+            const items = getItemsByStatus(group.status);
+            if (items.length === 0) return null;
+
+            return (
+              <div key={group.status} className="mb-2 space-y-1">
+                <div className="flex items-center justify-between px-2 py-1">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                    {group.title}
+                  </p>
+                  <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${group.badgeClass}`}>
+                    {items.length}
+                  </span>
+                </div>
+
+                {items.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`block rounded-lg px-3 py-1.5 transition-colors ${pathname === item.href
+                      ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
+                      : "text-zinc-600 hover:bg-zinc-100 dark:text-zinc-400 dark:hover:bg-zinc-800"
+                      }`}
+                  >
+                    <span className="block text-xs font-medium">{item.label}</span>
+                    {item.note && (
+                      <span className={`mt-0.5 block text-[10px] ${pathname === item.href ? "text-zinc-300 dark:text-zinc-600" : "text-zinc-400 dark:text-zinc-500"}`}>
+                        {item.note}
+                      </span>
+                    )}
+                  </Link>
+                ))}
+              </div>
+            );
+          })}
         </div>
       </nav>
     </>
