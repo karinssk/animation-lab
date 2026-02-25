@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
-type NavStatus = "updated" | "no_update" | "waiting";
+type NavStatus = "updated" | "no_update";
 
 type NavItem = {
   href: string;
@@ -16,20 +16,25 @@ type NavItem = {
 
 const NAV_ITEMS: NavItem[] = [
   { href: "/", label: "Scroll", status: "no_update" },
-  { href: "/home-screen-v2", label: "Toast Home", status: "updated" },
-  { href: "/create-wallet-pages", label: "Wallet V1 (SVG)", status: "updated", note: "Need mascot" },
-  { href: "/magnifying-glass-motion", label: "Magnifying Glass", status: "updated" },
-  { href: "/congratulations-food-found", label: "Food Found", status: "updated", note: "Optional super-likes" },
-  { href: "/swipe", label: "Swipe V1", status: "updated", note: "Split from Toast Home" },
+  { href: "/home-screen-v2", label: "Toast Home", status: "no_update" },
+  { href: "/toast-home-v2", label: "Toast Home V2", status: "updated" },
+  { href: "/create-wallet-pages", label: "Wallet V1 (SVG)", status: "no_update", note: "Need mascot" },
+  { href: "/magnifying-glass-motion", label: "Magnifying Glass", status: "no_update" },
+  { href: "/congratulations-food-found", label: "Food Found", status: "no_update", note: "Optional super-likes" },
+  { href: "/swipe", label: "Swipe V1", status: "no_update", note: "Split from Toast Home" },
   { href: "/swipe-v2", label: "Swipe V2", status: "no_update", note: "Split from Toast Home" },
+  { href: "/swipe-v3", label: "Swipe V3", status: "updated", note: "only animate ui " },
+  { href: "/swipe-v4", label: "Swipe V4", status: "updated", note: "Peek more menu behind card" },
+  { href: "/swipe-v5", label: "Swipe V5", status: "updated", note: "Full interactive swipe" },
+  { href: "/thai-spots-v1", label: "Thai Spots V1", status: "updated", note: "Pad Thai spots list" },
   { href: "/result", label: "Result V1", status: "no_update", note: "Split from Toast Home" },
-  { href: "/result-v2", label: "Result V2", status: "updated", note: "New result" },
-  { href: "/wallet-reveal", label: "Wallet Reveal", status: "waiting" },
+  { href: "/result-v2", label: "Result V2", status: "no_update", note: "New result" },
+  { href: "/wallet-reveal", label: "Wallet Reveal", status: "no_update" },
   { href: "/explore", label: "Explore Tab", status: "no_update", note: "Split from Toast Home" },
   { href: "/map", label: "Map Tab", status: "no_update", note: "Split from Toast Home" },
   { href: "/preferences-setup", label: "Profile Tab", status: "no_update", note: "Split from Toast Home" },
   { href: "/user-journey-diagram", label: "User Journey Diagram", status: "no_update" },
-  { href: "/fast-onboarding", label: "Fast Onboarding", status: "updated" },
+  { href: "/fast-onboarding", label: "Fast Onboarding", status: "no_update" },
   { href: "/comments", label: "Comments", status: "no_update" },
 ];
 
@@ -40,16 +45,35 @@ const NAV_GROUPS: Array<{
 }> = [
     { title: "Updated", status: "updated", badgeClass: "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300" },
     { title: "No Update", status: "no_update", badgeClass: "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300" },
-    { title: "Waiting", status: "waiting", badgeClass: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300" },
   ];
 
 function getItemsByStatus(status: NavStatus) {
   return NAV_ITEMS.filter((item) => item.status === status);
 }
 
+function IconChevron({ open }: { open: boolean }) {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={`transition-transform ${open ? "rotate-180" : ""}`}
+      aria-hidden="true"
+    >
+      <path d="M6 9l6 6 6-6" />
+    </svg>
+  );
+}
+
 export default function Navbar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [showNoUpdate, setShowNoUpdate] = useState(false);
 
   return (
     <>
@@ -88,7 +112,60 @@ export default function Navbar() {
               className="border-t border-zinc-200 bg-white/95 backdrop-blur-md dark:border-zinc-800 dark:bg-zinc-950/95 overflow-hidden"
             >
               <div className="flex flex-col p-4 gap-2 max-h-[calc(100vh-3.5rem)] overflow-y-auto">
-                {NAV_GROUPS.map((group) => {
+                {NAV_GROUPS.filter((group) => group.status === "updated").map((group) => {
+                  const items = getItemsByStatus(group.status);
+                  if (items.length === 0) return null;
+
+                  return (
+                    <div
+                      key={group.status}
+                      className="space-y-1.5 rounded-lg border border-emerald-200/80 bg-emerald-50/70 p-2 dark:border-emerald-900/40 dark:bg-emerald-900/20"
+                    >
+                      <div className="flex items-center justify-between px-1 pt-1">
+                        <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                          {group.title}
+                        </p>
+                        <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${group.badgeClass}`}>
+                          {items.length}
+                        </span>
+                      </div>
+
+                      {items.map((item) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => setIsOpen(false)}
+                          className={`block rounded-lg px-4 py-2.5 transition-colors ${pathname === item.href
+                            ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
+                            : "bg-emerald-100/80 text-emerald-900 hover:bg-emerald-200/90 dark:bg-emerald-900/35 dark:text-emerald-100 dark:hover:bg-emerald-900/55"
+                            }`}
+                        >
+                          <span className="block text-sm font-medium">{item.label}</span>
+                          {item.note && (
+                            <span className={`mt-0.5 block text-[10px] ${pathname === item.href ? "text-zinc-300 dark:text-zinc-600" : "text-zinc-400 dark:text-zinc-500"}`}>
+                              {item.note}
+                            </span>
+                          )}
+                        </Link>
+                      ))}
+                    </div>
+                  );
+                })}
+                <div className="mb-1 mt-1 flex items-center justify-center gap-2 rounded-md border border-amber-200 bg-amber-50 px-2 py-1 dark:border-amber-900/40 dark:bg-amber-500/10">
+                  <span className="text-[10px] font-semibold text-zinc-500 dark:text-zinc-400">
+                    {showNoUpdate ? "Tap icon to hide No Update" : "Tap icon to show No Update"}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setShowNoUpdate((prev) => !prev)}
+                    className="rounded-full border border-zinc-200 bg-white p-1.5 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-800 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+                    aria-label={showNoUpdate ? "Collapse No Update section" : "Expand No Update section"}
+                    title={showNoUpdate ? "Collapse" : "Expand"}
+                  >
+                    <IconChevron open={showNoUpdate} />
+                  </button>
+                </div>
+                {showNoUpdate && NAV_GROUPS.filter((group) => group.status === "no_update").map((group) => {
                   const items = getItemsByStatus(group.status);
                   if (items.length === 0) return null;
 
@@ -131,14 +208,68 @@ export default function Navbar() {
       </nav>
 
       {/* Desktop Navbar (Sidebar) */}
-      <nav className="fixed left-0 top-0 bottom-0 z-[100] hidden w-64 border-r border-zinc-200 bg-white/90 p-4 backdrop-blur-md md:block dark:border-zinc-800 dark:bg-zinc-950/90">
+      <nav
+        className="fixed left-0 top-0 bottom-0 z-[100] hidden w-64 border-r border-zinc-200 bg-white/90 p-4 backdrop-blur-md md:block dark:border-zinc-800 dark:bg-zinc-950/90"
+      >
         <div className="mb-4 border-b border-zinc-200 pb-4 dark:border-zinc-800">
           <Link href="/" className="text-base font-bold tracking-tight text-zinc-900 dark:text-white">
             Animation Lab
           </Link>
         </div>
         <div className="flex h-[calc(100%-4.5rem)] flex-col gap-1 overflow-y-auto pr-1">
-          {NAV_GROUPS.map((group) => {
+          {NAV_GROUPS.filter((group) => group.status === "updated").map((group) => {
+            const items = getItemsByStatus(group.status);
+            if (items.length === 0) return null;
+
+            return (
+              <div
+                key={group.status}
+                className="mb-2 space-y-1 rounded-lg border border-emerald-200/80 bg-emerald-50/70 p-2 dark:border-emerald-900/40 dark:bg-emerald-900/20"
+              >
+                <div className="flex items-center justify-between px-2 py-1">
+                  <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 dark:text-zinc-400">
+                    {group.title}
+                  </p>
+                  <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${group.badgeClass}`}>
+                    {items.length}
+                  </span>
+                </div>
+
+                {items.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`block rounded-lg px-3 py-1.5 transition-colors ${pathname === item.href
+                      ? "bg-zinc-900 text-white dark:bg-white dark:text-zinc-900"
+                      : "bg-emerald-100/80 text-emerald-900 hover:bg-emerald-200/90 dark:bg-emerald-900/35 dark:text-emerald-100 dark:hover:bg-emerald-900/55"
+                      }`}
+                  >
+                    <span className="block text-xs font-medium">{item.label}</span>
+                    {item.note && (
+                      <span className={`mt-0.5 block text-[10px] ${pathname === item.href ? "text-zinc-300 dark:text-zinc-600" : "text-zinc-400 dark:text-zinc-500"}`}>
+                        {item.note}
+                      </span>
+                    )}
+                  </Link>
+                ))}
+              </div>
+            );
+          })}
+          <div className="mb-2 mt-1 flex items-center justify-center gap-2 rounded-md border border-amber-200 bg-amber-50 px-2 py-1 dark:border-amber-900/40 dark:bg-amber-500/10">
+            <span className="text-[10px] font-semibold text-zinc-500 dark:text-zinc-400">
+              {showNoUpdate ? "Tap icon to hide No Update" : "Tap icon to show No Update"}
+            </span>
+            <button
+              type="button"
+              onClick={() => setShowNoUpdate((prev) => !prev)}
+              className="rounded-full border border-zinc-200 bg-white p-1.5 text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-800 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100"
+              aria-label={showNoUpdate ? "Collapse No Update section" : "Expand No Update section"}
+              title={showNoUpdate ? "Collapse" : "Expand"}
+            >
+              <IconChevron open={showNoUpdate} />
+            </button>
+          </div>
+          {showNoUpdate && NAV_GROUPS.filter((group) => group.status === "no_update").map((group) => {
             const items = getItemsByStatus(group.status);
             if (items.length === 0) return null;
 
